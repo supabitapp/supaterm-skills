@@ -7,7 +7,7 @@ Use this skill when you need to control Supaterm from a terminal that is already
 
 ## Terminology
 
-- Space: the top-level container in a window
+- Space: the top-level container that contains multiple tabs, users might use this to separate work / life profile. 
 - Tab: a terminal tab inside a space
 - Pane: a split terminal region inside a tab
 
