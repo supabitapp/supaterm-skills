@@ -5,13 +5,13 @@ description: Control Supaterm spaces, tabs, panes, and coding-agent integrations
 
 Use this skill when you need to control Supaterm from a terminal that is already running inside Supaterm.
 
+## Terminology
+
+- Space: the top-level container in a window
+- Tab: a terminal tab inside a space
+- Pane: a split terminal region inside a tab
+
 ## Fast Start
-
-Check that the Supaterm socket is reachable:
-
-```bash
-sp internal ping
-```
 
 Discover selectors and UUIDs:
 
