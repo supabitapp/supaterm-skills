@@ -90,8 +90,8 @@ sp pane layout main-vertical <tab-uuid>
 
 ```bash
 sp pane notify --body "All tests passed"
-sp pane notify --body "Deploy complete" 1/2/3
-sp pane notify --body "Deploy complete" <pane-uuid>
+sp pane notify 1/2/3 --body "Deploy complete"
+sp pane notify <pane-uuid> --body "Deploy complete"
 ```
 
 ## Output
