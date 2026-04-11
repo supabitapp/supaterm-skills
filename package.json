@@ -1,0 +1,22 @@
+{
+  "name": "@supabitapp/supaterm-skills",
+  "version": "0.1.0",
+  "description": "Public installables for Supaterm integrations",
+  "keywords": [
+    "pi-package",
+    "pi",
+    "skills",
+    "supaterm"
+  ],
+  "license": "Elastic-2.0",
+  "private": true,
+  "peerDependencies": {
+    "@mariozechner/pi-ai": "*",
+    "@mariozechner/pi-coding-agent": "*"
+  },
+  "pi": {
+    "extensions": [
+      "./extensions"
+    ]
+  }
+}
