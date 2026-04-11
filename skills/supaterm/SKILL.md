@@ -19,6 +19,16 @@ Discover selectors and UUIDs:
 sp ls --json
 ```
 
+Creation commands use typed JSON keys instead of a generic `id`:
+
+```bash
+sp tab new --json -- git status
+# => { "spaceID": "...", "tabID": "...", "paneID": "...", ... }
+
+sp pane split --json right
+# => { "spaceID": "...", "tabID": "...", "paneID": "...", ... }
+```
+
 Create and focus spaces:
 
 ```bash

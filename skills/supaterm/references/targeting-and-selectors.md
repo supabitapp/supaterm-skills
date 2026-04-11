@@ -32,6 +32,29 @@ That ambient context comes from:
 
 You can also pass UUIDs anywhere the CLI accepts a space, tab, or pane target.
 
+## Creation JSON
+
+`sp ls --json` returns the full tree with generic object `id` fields inside each space, tab, and pane entry.
+
+Creation commands return typed IDs instead:
+
+```bash
+sp tab new --json -- git status
+```
+
+```json
+{
+  "spaceID": "BBBDD2AB-3F53-4BCA-B120-CE4A5E8C7F18",
+  "tabID": "3734DE02-672F-4914-95DE-35D093CE1B3A",
+  "paneID": "5E6E9773-222B-468A-AA65-11341F2926FF",
+  "spaceIndex": 2,
+  "tabIndex": 1,
+  "paneIndex": 1
+}
+```
+
+Use `tabID` or `paneID` from creation output when chaining follow-up commands like `sp pane split --in <tabID>` or `sp pane send <paneID> ...`.
+
 ## `--in`
 
 Targeted creation commands use `--in`:
