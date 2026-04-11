@@ -8,7 +8,7 @@
     "skills",
     "supaterm"
   ],
-  "license": "Elastic-2.0",
+  "license": "Unlicense",
   "private": true,
   "peerDependencies": {
     "@mariozechner/pi-ai": "*",
