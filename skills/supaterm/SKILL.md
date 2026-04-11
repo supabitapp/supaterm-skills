@@ -34,6 +34,8 @@ sp tab new --focus -- git status
 sp tab focus 1/2
 ```
 
+Trailing arguments and `--shell` become startup input for the new tab's shell.
+
 Split panes and send commands:
 
 ```bash
@@ -41,6 +43,8 @@ sp pane split down -- htop
 sp pane split --layout keep right
 sp pane send --newline 'echo hello'
 ```
+
+Trailing arguments and `--shell` become startup input for the new pane's shell.
 
 ## Deep-Dive References
 
