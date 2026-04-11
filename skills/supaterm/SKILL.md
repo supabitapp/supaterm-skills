@@ -1,45 +1,51 @@
 ---
 name: supaterm
-description: Use to create terminal tabs and panes if running within Supaterm through `sp tab new` and `sp pane split`. Trigger this skill when you need to open a new tab in a space or split an existing pane in a direction.
+description: Control Supaterm spaces, tabs, panes, and coding-agent integrations with `sp`.
 ---
 
-## `ping`
+Use this skill when you need to control Supaterm from a terminal that is already running inside Supaterm.
 
-Before any command, run `sp internal ping` to see if the socket is live first.
+## Fast Start
 
-## `tab new`
-
-- Use `sp tab new --json ...` to create a tab.
-- Inside Supaterm, omit `--in` to create the tab in the current space.
-- Outside Supaterm, pass `--in <space>`.
-- Pass `--cwd <path>` to start the tab in a specific working directory.
-- Pass `--shell <script>` to run a raw shell script, including multiple commands.
-- Pass `--focus` to focus the new tab after creating it.
-- Append a command to run immediately in the new tab.
-- Use `sp ls --json` to discover selectors and UUIDs.
+Check that the Supaterm socket is reachable:
 
 ```bash
-sp tab new --json
-sp tab new --json --focus -- ping 1.1.1.1
-sp tab new --json --shell $'echo 1\necho 2'
-sp tab new --json --in 1 --cwd ~/tmp -- git status
+sp internal ping
 ```
 
-## `pane split`
-
-- Use `sp pane split --json right|left|up|down ...` to split a pane.
-- Inside Supaterm, omit `--in` to split the current pane.
-- Outside Supaterm, pass `--in <space/tab>` or `--in <space/tab/pane>`.
-- Pass `--shell <script>` to run a raw shell script, including multiple commands.
-- Pass `--cwd <path>` to start the new pane in a specific working directory.
-- Pass `--layout keep` to preserve the existing pane sizing.
-- Append a command to run immediately in the new pane.
-- Use `sp ls --json` to discover selectors and UUIDs.
+Discover selectors and UUIDs:
 
 ```bash
-sp pane split --json right
-sp pane split --json down -- htop
-sp pane split --json down --shell $'echo 1\necho 2'
-sp pane split --json --in 1/2 left
-sp pane split --json --in 1/2/1 down -- tail -f /tmp/server.log
+sp ls --json
 ```
+
+Create and focus spaces:
+
+```bash
+sp space new Work
+sp space new --focus Build
+sp space focus 1
+```
+
+Create and focus tabs:
+
+```bash
+sp tab new --focus -- git status
+sp tab focus 1/2
+```
+
+Split panes and send commands:
+
+```bash
+sp pane split down -- htop
+sp pane split --layout keep right
+sp pane send --newline 'echo hello'
+```
+
+## Deep-Dive References
+
+- [Targeting and selectors](references/targeting-and-selectors.md)
+- [Space commands](references/space.md)
+- [Tab commands](references/tab.md)
+- [Pane commands](references/pane.md)
+- [Agent commands](references/agent.md)
