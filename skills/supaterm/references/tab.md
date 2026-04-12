@@ -4,11 +4,11 @@
 
 ## Create
 
-`sp tab new` creates a tab in the current space when run inside Supaterm. Use `--in` to target a specific space. Trailing arguments and `--shell` become startup input for the new tab's shell.
+`sp tab new` creates a tab in the current space when run inside Supaterm. Use `--in` to target a specific space. Trailing arguments after `--` are treated as a command and its arguments. `--script` sends raw shell script text exactly as provided.
 
 ```bash
 sp tab new -- ping 1.1.1.1
-sp tab new --shell $'echo 1\necho 2'
+sp tab new --script 'echo hi; pwd'
 sp tab new --focus -- git status
 sp tab new --in 1 --cwd ~/tmp -- ping 1.1.1.1
 sp tab new --in <space-uuid> --cwd ~/tmp -- ping 1.1.1.1
@@ -18,7 +18,7 @@ Flags:
 
 - `--focus` focuses the new tab
 - `--cwd <path>` sets the starting working directory
-- `--shell <script>` sends raw startup input
+- `--script <script>` sends raw shell script text exactly as provided
 - `--in <space>` targets a space selector or UUID
 
 ## Focus

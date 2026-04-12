@@ -44,7 +44,9 @@ sp tab new --focus -- git status
 sp tab focus 1/2
 ```
 
-Trailing arguments and `--shell` become startup input for the new tab's shell.
+Trailing arguments after `--` are treated as a command and its arguments.
+
+`--script` sends raw shell script text exactly as provided.
 
 Split panes and send commands:
 
@@ -54,7 +56,9 @@ sp pane split --layout keep right
 sp pane send --newline 'echo hello'
 ```
 
-Trailing arguments and `--shell` become startup input for the new pane's shell.
+Trailing arguments after `--` are treated as a command and its arguments.
+
+`--script` sends raw shell script text exactly as provided.
 
 ## Deep-Dive References
 
