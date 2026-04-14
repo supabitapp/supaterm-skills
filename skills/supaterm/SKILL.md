@@ -37,11 +37,13 @@ sp space new --focus Build
 sp space focus 1
 ```
 
-Create and focus tabs:
+Create, focus, and pin tabs:
 
 ```bash
 sp tab new --focus -- git status
 sp tab focus 1/2
+sp tab pin 1/2
+sp tab unpin 1/2
 ```
 
 Trailing arguments after `--` are treated as a command and its arguments.

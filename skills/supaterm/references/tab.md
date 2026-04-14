@@ -1,6 +1,6 @@
 # Tab Commands
 
-`sp tab` creates, selects, renames, closes, and navigates tabs.
+`sp tab` creates, selects, pins, unpins, renames, closes, and navigates tabs.
 
 ## Create
 
@@ -39,6 +39,26 @@ sp tab focus <tab-uuid>
 sp tab rename Build
 sp tab rename Logs 1/2
 sp tab rename Deploy <tab-uuid>
+```
+
+## Pin
+
+`sp tab pin [tab]` pins a tab.
+
+```bash
+sp tab pin
+sp tab pin 1/2
+sp tab pin <tab-uuid>
+```
+
+## Unpin
+
+`sp tab unpin [tab]` unpins a tab.
+
+```bash
+sp tab unpin
+sp tab unpin 1/2
+sp tab unpin <tab-uuid>
 ```
 
 ## Close
