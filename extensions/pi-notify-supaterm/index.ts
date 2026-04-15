@@ -493,39 +493,50 @@ export default function (pi: ExtensionAPI) {
     const projectName = basename(process.cwd());
     const sessionName = pi.getSessionName();
     const assistantMessage = getLastAssistantMessage(event.messages);
+    const assistantText = summarizeAssistantText(assistantMessage);
     const runError = summarizeRunError(assistantMessage, runState.firstToolError);
     const isTruncated = assistantMessage?.stopReason === "length";
     const isTaskComplete = runState.changedFiles.size > 0 || durationMs >= taskCompleteThresholdMs;
 
     let state: NotificationState;
-    let summary: string;
+    let fallbackBody: string;
 
     if (runError) {
       state = "Error";
-      summary = runError;
+      fallbackBody = runError;
     } else if (isTruncated) {
       state = "Truncated";
       const successSummary = summarizeSuccess(runState, durationMs, isTaskComplete);
-      summary = successSummary === "Finished and waiting for input"
+      fallbackBody = successSummary === "Finished and waiting for input"
         ? "Response truncated"
         : `${successSummary} · response truncated`;
     } else {
       state = isTaskComplete ? "Task Complete" : "Waiting";
-      summary = summarizeSuccess(runState, durationMs, isTaskComplete);
+      fallbackBody = summarizeSuccess(runState, durationMs, isTaskComplete);
     }
 
-    const body = buildBody(summary, projectName, sessionName);
+    const body = runError ? fallbackBody : assistantText ?? fallbackBody;
     currentTool = undefined;
     stopSpinner();
     updateIdleTitle(state);
 
     if (isSupatermPane()) {
       await stopSupatermRunningHeartbeat();
+      if (state === "Task Complete") {
+        await sendSupatermHook(
+          supatermHookEvent("Stop", {
+            last_assistant_message: body,
+            permission_mode: defaultPermissionMode,
+          })
+        );
+        return;
+      }
+
       await sendSupatermHook(
         supatermHookEvent("Notification", {
           message: body,
           notification_type: state === "Error" ? "error" : "request_input",
-          title: body,
+          title: state,
         })
       );
       await sendSupatermHook(
@@ -536,7 +547,7 @@ export default function (pi: ExtensionAPI) {
       return;
     }
 
-    notify(body, body);
+    notify(buildBody(body, projectName, sessionName), body);
   });
 
   pi.on("session_shutdown", async (_event, ctx) => {
