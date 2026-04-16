@@ -1,6 +1,6 @@
 # Targeting And Selectors
 
-Use `sp ls --json` to discover the current Supaterm tree, including selectors and UUIDs.
+Use `sp ls --json` to discover the current Supaterm tree, including selectors and UUIDs. `sp ls` and `sp ls --plain` include pane display titles.
 
 ```bash
 sp ls
