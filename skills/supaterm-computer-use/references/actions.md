@@ -13,6 +13,25 @@ sp computer-use click --pid 123 --window 456 --x 320 --y 240 --json
 ```
 
 Coordinates are in the same pixel space as the latest window screenshot.
+Coordinate clicks can target background windows. Prefer element clicks when the element supports AX actions.
+
+Right click:
+
+```bash
+sp computer-use click --pid 123 --window 456 --element 7 --button right --json
+```
+
+Double click:
+
+```bash
+sp computer-use click --pid 123 --window 456 --x 320 --y 240 --count 2 --json
+```
+
+Modified click:
+
+```bash
+sp computer-use click --pid 123 --window 456 --element 7 --modifier command --json
+```
 
 Type text:
 
