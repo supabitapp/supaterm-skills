@@ -63,9 +63,9 @@ Targeted creation commands use `--in`:
 - `sp pane split --in <tab>`
 - `sp pane split --in <pane>`
 
-Trailing arguments after `--` on `sp tab new` and `sp pane split` are treated as a command and its arguments.
+Trailing arguments after `--` on `sp tab new` and `sp pane split` are treated as a terminal startup command.
 
-`--script` sends raw shell script text exactly as provided.
+`--script` runs shell script text as the terminal startup command.
 
 Examples:
 

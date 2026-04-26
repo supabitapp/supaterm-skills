@@ -46,9 +46,13 @@ sp tab pin 1/2
 sp tab unpin 1/2
 ```
 
-Trailing arguments after `--` are treated as a command and its arguments.
+Trailing arguments after `--` are treated as a terminal startup command.
 
-`--script` sends raw shell script text exactly as provided.
+`--script` runs shell script text as the terminal startup command. End setup scripts with `exec "${SHELL:-/bin/zsh}" -l` when the tab or pane should stay open.
+
+```bash
+sp tab new --script 'make worktree-create WORKTREE=exploration && exec wt exec exploration -- "${SHELL:-/bin/zsh}" -l'
+```
 
 Split panes and send commands:
 
@@ -58,9 +62,9 @@ sp pane split --layout keep right
 sp pane send --newline 'echo hello'
 ```
 
-Trailing arguments after `--` are treated as a command and its arguments.
+Trailing arguments after `--` are treated as a terminal startup command.
 
-`--script` sends raw shell script text exactly as provided.
+`--script` runs shell script text as the terminal startup command. End setup scripts with `exec "${SHELL:-/bin/zsh}" -l` when the pane should stay open.
 
 ## Deep-Dive References
 

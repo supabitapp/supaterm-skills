@@ -4,7 +4,7 @@
 
 ## Split
 
-`sp pane split <direction>` creates a new pane beside the current pane when run inside Supaterm. Use `--in` to target a tab or pane explicitly. Trailing arguments after `--` are treated as a command and its arguments. `--script` sends raw shell script text exactly as provided.
+`sp pane split <direction>` creates a new pane beside the current pane when run inside Supaterm. Use `--in` to target a tab or pane explicitly. Trailing arguments after `--` are treated as a terminal startup command. `--script` runs shell script text as the terminal startup command.
 
 ```bash
 sp pane split right
@@ -20,7 +20,7 @@ Flags:
 
 - `--layout keep` preserves the existing pane sizing
 - `--cwd <path>` sets the starting working directory
-- `--script <script>` sends raw shell script text exactly as provided
+- `--script <script>` runs shell script text as the terminal startup command
 - `--in <tab-or-pane>` targets a tab selector, pane selector, or UUID
 
 ## Focus And Close
