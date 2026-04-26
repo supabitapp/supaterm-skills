@@ -34,6 +34,7 @@ sp computer-use set-value --pid 123 --window 456 --element 9 "new value" --json
 ```
 
 Use `set-value` for popup buttons when a click response returns a popup warning.
+If an element click returns `action_failed`, re-snapshot, then retry with coordinates only if the screenshot shows the target still needs a pixel click.
 Re-run `snapshot` after each action and inspect the changed element state or screenshot.
 
 ## Rules

@@ -8,6 +8,7 @@ sp computer-use click --pid 123 --window 456 --element 7 --action press --json
 
 Element actions are `press`, `show-menu`, `pick`, `confirm`, `cancel`, and `open`.
 Use the `actions` array from the latest snapshot to choose the action.
+If the selected AX action fails, the click returns `action_failed`; re-snapshot and use a coordinate click only when no AX action can drive the target.
 
 Coordinate click:
 
