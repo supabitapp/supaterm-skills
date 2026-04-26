@@ -6,6 +6,7 @@ Public installables for Supaterm.
 
 ```bash
 npx skills add supabitapp/supaterm-skills --skill supaterm -g
+npx skills add supabitapp/supaterm-skills --skill supaterm-computer-use -g
 ```
 
 ## Pi
