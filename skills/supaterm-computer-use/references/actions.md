@@ -12,6 +12,8 @@ Coordinate click:
 sp computer-use click --pid 123 --window 456 --x 320 --y 240 --json
 ```
 
+Coordinates are in the same pixel space as the latest window screenshot.
+
 Type text:
 
 ```bash
