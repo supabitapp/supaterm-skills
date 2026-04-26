@@ -13,6 +13,14 @@ sp computer-use launch --bundle-id com.apple.TextEdit --json
 sp computer-use launch --name TextEdit --url /tmp/example.txt --argument=--foreground --env=FOO=bar --json
 ```
 
+Browser page setup:
+
+```bash
+sp computer-use launch --bundle-id com.google.Chrome --url https://example.com --new-instance --json
+sp computer-use launch --bundle-id com.example.ElectronApp --electron-debugging-port 9222 --json
+sp computer-use launch --bundle-id com.example.TauriApp --webkit-inspector-port 9226 --json
+```
+
 Launch returns the pid, bundle ID, active flag, and currently known windows.
 
 List windows:

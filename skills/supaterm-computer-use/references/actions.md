@@ -71,3 +71,17 @@ sp computer-use set-value --pid 123 --window 456 --element 9 "new value" --json
 
 For popup buttons, prefer `set-value` with the visible option title or value.
 After every action, run `snapshot` again to verify the result.
+
+Browser page text and DOM:
+
+```bash
+sp computer-use page get-text --pid 123 --window 456 --json
+sp computer-use page query-dom --pid 123 --window 456 --selector a --attribute href --json
+sp computer-use page execute-javascript --pid 123 --window 456 '(() => document.title)()' --json
+sp computer-use page enable-javascript-apple-events --browser chrome --json
+sp computer-use page enable-javascript-apple-events --browser safari --json
+```
+
+Use page commands for web content. `get-text` reads page body text when the browser supports it and can fall back to AX for WKWebView-style apps. `query-dom` returns typed JSON. `execute-javascript` is for page JavaScript, not native AX controls.
+
+If a browser returns an error that says JavaScript from Apple Events must be enabled, stop and notify the user. Do not retry JavaScript or Safari select fallback commands until the setting is enabled.

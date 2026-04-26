@@ -1,9 +1,9 @@
 ---
 name: supaterm-computer-use
-description: "Inspect and control native macOS apps through Supaterm's `sp computer-use` CLI. Use when Codex needs to operate a real app window on the host: list apps/windows, capture screenshots, inspect accessibility elements, click, type, press keys, scroll, set values, or verify UI changes after actions."
+description: "Inspect and control native macOS apps and browser page content through Supaterm's `sp computer-use` CLI. Use when Codex needs to operate a real app window on the host: list apps/windows, capture screenshots, inspect accessibility elements, click, type, press keys, scroll, set values, read page text, query DOM, execute page JavaScript, or verify UI changes after actions."
 ---
 
-Use this skill when you need to operate a native macOS app from a Supaterm terminal.
+Use this skill when you need to operate a native macOS app or browser page from a Supaterm terminal.
 
 ## Workflow
 
@@ -33,6 +33,24 @@ sp computer-use scroll --pid 123 --window 456 --element 10 --direction down --un
 sp computer-use set-value --pid 123 --window 456 --element 9 "new value" --json
 ```
 
+For browser page content, use the page commands instead of inferring DOM state from native AX elements:
+
+```bash
+sp computer-use launch --bundle-id com.google.Chrome --url https://example.com --new-instance --json
+sp computer-use windows --app com.google.Chrome --json
+sp computer-use page enable-javascript-apple-events --browser chrome --json
+sp computer-use page enable-javascript-apple-events --browser safari --json
+sp computer-use page get-text --pid 123 --window 456 --json
+sp computer-use page query-dom --pid 123 --window 456 --selector a --attribute href --json
+sp computer-use page execute-javascript --pid 123 --window 456 '(() => document.title)()' --json
+```
+
+For Electron apps that need DOM access, launch with a renderer debugging port:
+
+```bash
+sp computer-use launch --bundle-id com.example.ElectronApp --electron-debugging-port 9222 --json
+```
+
 Use `set-value` for popup buttons when a click response returns a popup warning.
 If an element click returns `action_failed`, re-snapshot, then retry with coordinates only if the screenshot shows the target still needs a pixel click.
 Re-run `snapshot` after each action and inspect the changed element state or screenshot.
@@ -43,6 +61,8 @@ Re-run `snapshot` after each action and inspect the changed element state or scr
 - Run `snapshot` for the target window before using `--element`.
 - `--query` only filters returned elements; it does not renumber cached indices.
 - Use coordinates only when there is no usable element.
+- Use `launch --url` for browser navigation; do not set the omnibox through AX.
+- If a browser reports that JavaScript from Apple Events must be enabled, stop and notify the user. Do not keep retrying JavaScript or Safari select fallback commands until the setting is enabled.
 - Keep `--image-out` paths under `/tmp` unless the user asks for a specific location.
 - If permissions are missing, tell the user to open Supaterm Settings > Computer Use.
 
