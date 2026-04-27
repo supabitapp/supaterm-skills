@@ -14,6 +14,8 @@ Coordinate click:
 
 ```bash
 sp computer-use click --pid 123 --window 456 --x 320 --y 240 --json
+sp computer-use click --pid 123 --window 456 --x 320 --y 240 --debug-image-out /tmp/click.png --json
+sp computer-use click --pid 123 --window 456 --x 24 --y 18 --from-zoom --json
 ```
 
 Coordinates are in the same pixel space as the latest window screenshot.
@@ -41,6 +43,7 @@ Type text:
 
 ```bash
 sp computer-use type --pid 123 "hello" --json
+sp computer-use type-chars --pid 123 "hello" --json
 sp computer-use type --pid 123 --window 456 --element 7 --delay-ms 10 "hello" --json
 ```
 
@@ -52,7 +55,10 @@ Press keys:
 sp computer-use key --pid 123 return --json
 sp computer-use key --pid 123 --window 456 --element 7 return --json
 sp computer-use key --pid 123 --modifier command s --json
+sp computer-use hotkey --pid 123 command+shift+p --json
 ```
+
+Named keys include arrows, page keys, `forwarddelete`, and `f1` through `f12`. Modifiers include command, shift, option, control, and function.
 
 Scroll:
 
@@ -79,6 +85,8 @@ sp computer-use page get-text --pid 123 --window 456 --json
 sp computer-use page query-dom --pid 123 --window 456 --selector a --attribute href --json
 sp computer-use page execute-javascript --pid 123 --window 456 '(() => document.title)()' --json
 sp computer-use page enable-javascript-apple-events --browser chrome --json
+sp computer-use page enable-javascript-apple-events --browser brave --json
+sp computer-use page enable-javascript-apple-events --browser edge --json
 sp computer-use page enable-javascript-apple-events --browser safari --json
 ```
 

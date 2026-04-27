@@ -21,6 +21,7 @@ Capture a window before acting:
 ```bash
 sp computer-use snapshot --pid 123 --window 456 --mode som --image-out /tmp/window.png --json
 sp computer-use snapshot --pid 123 --window 456 --query save --json
+sp computer-use zoom --pid 123 --window 456 --x 80 --y 120 --width 320 --height 180 --image-out /tmp/zoom.png --json
 ```
 
 Prefer `elementIndex` actions from the latest snapshot:
@@ -33,16 +34,30 @@ sp computer-use scroll --pid 123 --window 456 --element 10 --direction down --un
 sp computer-use set-value --pid 123 --window 456 --element 9 "new value" --json
 ```
 
+Use cheap utility commands when coordinates or text legibility are uncertain:
+
+```bash
+sp computer-use screen-size --json
+sp computer-use cursor position --json
+sp computer-use cursor move --x 600 --y 420 --json
+sp computer-use screenshot --window 456 --image-out /tmp/window.png --json
+sp computer-use click --pid 123 --window 456 --x 80 --y 120 --debug-image-out /tmp/click.png --json
+sp computer-use click --pid 123 --window 456 --x 24 --y 18 --from-zoom --json
+```
+
 For browser page content, use the page commands instead of inferring DOM state from native AX elements:
 
 ```bash
 sp computer-use launch --bundle-id com.google.Chrome --url https://example.com --new-instance --json
 sp computer-use windows --app com.google.Chrome --json
 sp computer-use page enable-javascript-apple-events --browser chrome --json
+sp computer-use page enable-javascript-apple-events --browser brave --json
+sp computer-use page enable-javascript-apple-events --browser edge --json
 sp computer-use page enable-javascript-apple-events --browser safari --json
 sp computer-use page get-text --pid 123 --window 456 --json
 sp computer-use page query-dom --pid 123 --window 456 --selector a --attribute href --json
 sp computer-use page execute-javascript --pid 123 --window 456 '(() => document.title)()' --json
+sp computer-use snapshot --pid 123 --window 456 --javascript '(() => document.title)()' --json
 ```
 
 For Electron apps that need DOM access, launch with a renderer debugging port:
@@ -61,6 +76,7 @@ Re-run `snapshot` after each action and inspect the changed element state or scr
 - Run `snapshot` for the target window before using `--element`.
 - `--query` only filters returned elements; it does not renumber cached indices.
 - Use coordinates only when there is no usable element.
+- Use `zoom` before reading small text from a resized snapshot.
 - Use `launch --url` for browser navigation; do not set the omnibox through AX.
 - If a browser reports that JavaScript from Apple Events must be enabled, stop and notify the user. Do not keep retrying JavaScript or Safari select fallback commands until the setting is enabled.
 - Keep `--image-out` paths under `/tmp` unless the user asks for a specific location.
@@ -72,3 +88,4 @@ Re-run `snapshot` after each action and inspect the changed element state or scr
 - Apps and windows: `references/apps-and-windows.md`
 - Snapshots and elements: `references/snapshot-and-elements.md`
 - Actions: `references/actions.md`
+- Recording and cursor: `references/recording-and-cursor.md`
