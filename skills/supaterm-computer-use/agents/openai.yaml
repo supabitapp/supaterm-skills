@@ -1,4 +1,0 @@
-interface:
-  display_name: "Supaterm Computer Use"
-  short_description: "Control macOS apps through Supaterm"
-  default_prompt: "Use $supaterm-computer-use to inspect a macOS app window, act on elements, and verify the result."
