@@ -15,7 +15,6 @@ Effects:
 
 - `claude` installs Supaterm hooks into `~/.claude/settings.json`
 - `codex` enables Codex hooks and installs Supaterm hooks into `~/.codex/hooks.json`
-- Installed Claude and Codex hooks are silently refreshed when the Supaterm app launches.
 
 ## Remove Hooks
 
