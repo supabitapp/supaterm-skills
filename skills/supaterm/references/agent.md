@@ -7,12 +7,14 @@
 Install Supaterm's managed hook bridge into an agent configuration:
 
 ```bash
+sp agent install-hooks
 sp agent install-hook claude
 sp agent install-hook codex
 ```
 
 Effects:
 
+- `install-hooks` installs every supported Supaterm hook bridge
 - `claude` installs Supaterm hooks into `~/.claude/settings.json`
 - `codex` enables Codex hooks and installs Supaterm hooks into `~/.codex/hooks.json`
 
