@@ -6,6 +6,7 @@ Use `sp ls --json` to discover the current Supaterm tree, including selectors an
 sp ls
 sp ls --json
 sp ls --plain
+sp ls --instance work-mac
 ```
 
 ## Ambient Targeting
@@ -23,6 +24,8 @@ That ambient context comes from:
 - `SUPATERM_SOCKET_PATH`
 - `SUPATERM_SURFACE_ID`
 - `SUPATERM_TAB_ID`
+
+`SUPATERM_SOCKET_PATH` chooses the app socket. `SUPATERM_SURFACE_ID` and `SUPATERM_TAB_ID` choose the pane or tab target after the socket is connected.
 
 ## Selector Forms
 
@@ -90,11 +93,12 @@ sp pane split --in <pane-uuid> up
 
 ## Outside Supaterm
 
-Outside Supaterm, omit ambient assumptions and pass an explicit target:
+Outside Supaterm, omit ambient assumptions and pass an explicit target. If more than one app instance is reachable, also pass `--instance` or `--socket`.
 
 ```bash
 sp tab new --in 1 -- git status
 sp pane split --in 1/2 right
 sp tab focus 1/2
 sp pane focus 1/2/3
+sp pane capture --instance work-mac 1/2/3
 ```

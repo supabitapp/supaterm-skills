@@ -18,6 +18,7 @@ sp tab new --in <space-uuid> --cwd ~/tmp -- ping 1.1.1.1
 Flags:
 
 - `--focus` focuses the new tab
+- `--no-focus` leaves focus unchanged
 - `--cwd <path>` sets the starting working directory
 - `--script <script>` runs shell script text as the terminal startup command
 - `--in <space>` targets a space selector or UUID

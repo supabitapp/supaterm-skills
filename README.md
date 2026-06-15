@@ -5,7 +5,7 @@ Public installables for Supaterm.
 ## Skill
 
 ```bash
-npx skills add supabitapp/supaterm-skills --skill supaterm -g
+sp agent install-skill
 ```
 
 ## Pi

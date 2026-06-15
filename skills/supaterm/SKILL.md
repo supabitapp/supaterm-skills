@@ -7,11 +7,19 @@ Use this skill when you need to control Supaterm from a terminal that is already
 
 ## Terminology
 
-- Space: the top-level container that contains multiple tabs, users might use this to separate work / life profile. 
+- Space: the top-level container that contains multiple tabs, users might use this to separate work / life profile.
 - Tab: a terminal tab inside a space
 - Pane: a split terminal region inside a tab
 
 ## Fast Start
+
+Show setup commands and diagnostics:
+
+```bash
+sp onboard
+sp diagnostic
+sp instance ls
+```
 
 Discover selectors and UUIDs:
 
@@ -68,6 +76,7 @@ Trailing arguments after `--` are treated as a terminal startup command.
 
 ## Deep-Dive References
 
+- [Connection and diagnostics](references/connection-and-diagnostics.md)
 - [Targeting and selectors](references/targeting-and-selectors.md)
 - [Space commands](references/space.md)
 - [Tab commands](references/tab.md)

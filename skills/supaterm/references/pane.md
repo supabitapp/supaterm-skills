@@ -19,6 +19,9 @@ sp pane split --in 1/2/3 down -- tail -f /tmp/server.log
 Flags:
 
 - `--layout keep` preserves the existing pane sizing
+- `--layout equalize` equalizes panes after splitting
+- `--focus` focuses the new pane
+- `--no-focus` leaves focus unchanged
 - `--cwd <path>` sets the starting working directory
 - `--script <script>` runs shell script text as the terminal startup command
 - `--in <tab-or-pane>` targets a tab selector, pane selector, or UUID
@@ -43,12 +46,15 @@ sp pane close <pane-uuid>
 sp pane send --newline 'echo hello'
 sp pane send 1/2/3 'pwd'
 sp pane send <pane-uuid> 'clear'
+sp pane send 1/2/3 -
 printf 'pwd' | sp pane send
 ```
 
+Use `-` to read the text argument from stdin.
+
 ## Capture
 
-`sp pane capture` captures visible output or scrollback.
+`sp pane capture` captures visible output by default, or scrollback with `--scope scrollback`.
 
 ```bash
 sp pane capture
@@ -90,6 +96,8 @@ sp pane layout main-vertical <tab-uuid>
 
 ```bash
 sp pane notify --body "All tests passed"
+sp pane notify --title "Deploy complete"
+sp pane notify --subtitle "Production" --body "Deploy complete"
 sp pane notify 1/2/3 --body "Deploy complete"
 sp pane notify <pane-uuid> --body "Deploy complete"
 ```
