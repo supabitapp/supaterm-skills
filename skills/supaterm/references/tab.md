@@ -30,7 +30,7 @@ scripts/start_tab.py --cwd "$PWD" -- git status
 printf 'echo one\necho two\n' | scripts/start_tab.py --cwd "$PWD" --stdin
 ```
 
-The helper starts a plain shell tab first, waits briefly for the pane, then sends a temporary launcher path into the pane with `sp pane send`.
+The helper starts a plain shell tab first, waits for pane readiness, then sends a temporary launcher path into the pane with `sp pane send`.
 
 ## Focus
 

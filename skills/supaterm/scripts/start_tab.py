@@ -92,30 +92,33 @@ def launcher_text(args, cwd, script):
     return "\n".join(lines) + "\n"
 
 
-def capture_pane(tab):
-    return subprocess.run(
-        [
-            "sp",
-            "pane",
-            "capture",
-            "--scope",
-            "scrollback",
-            "--lines",
-            "20",
-            tab["paneID"],
-        ],
+def wait_for_pane(tab, launcher_path, send_text):
+    result = subprocess.run(
+        ["sp", "pane", "wait-ready", "--quiet", "--timeout", "5", tab["paneID"]],
         text=True,
         capture_output=True,
     )
-
-
-def wait_for_pane(tab):
-    time.sleep(3.0)
-    capture_pane(tab)
+    if result.returncode == 0:
+        return
+    sys.stderr.write(
+        json.dumps(
+            {
+                "error": "failed to wait for pane readiness",
+                "tabID": tab.get("tabID"),
+                "paneID": tab.get("paneID"),
+                "launcherPath": str(launcher_path),
+                "sendText": send_text,
+                "stderr": result.stderr,
+            },
+            indent=2,
+        )
+        + "\n"
+    )
+    raise SystemExit(result.returncode)
 
 
 def send_launcher(tab, launcher_path, send_text):
-    wait_for_pane(tab)
+    wait_for_pane(tab, launcher_path, send_text)
     last_result = None
     for _ in range(20):
         result = subprocess.run(

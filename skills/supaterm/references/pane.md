@@ -1,6 +1,6 @@
 # Pane Commands
 
-`sp pane` splits, focuses, closes, resizes, captures, notifies, and sends text to panes.
+`sp pane` splits, focuses, closes, resizes, captures, checks readiness, notifies, and sends text to panes.
 
 ## Split
 
@@ -60,6 +60,15 @@ Use `-` to read the text argument from stdin.
 sp pane capture
 sp pane capture --scope scrollback --lines 200
 sp pane capture --json <pane-uuid>
+```
+
+## Health And Readiness
+
+`sp pane health` reports whether a pane is ready for input. `sp pane wait-ready` waits until readiness is true or the timeout expires.
+
+```bash
+sp pane health <pane-uuid> --json
+sp pane wait-ready <pane-uuid> --timeout 5
 ```
 
 ## Resize
