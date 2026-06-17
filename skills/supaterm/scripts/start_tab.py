@@ -80,15 +80,15 @@ def launcher_text(args, cwd, script):
         f"cd {shlex.quote(str(cwd))} || exit 1",
     ]
     lines.append(script if script.endswith("\n") else script + "\n")
-    lines.append("status=$?")
+    lines.append("launcher_status=$?")
     if args.keep_open:
         lines.extend(
             [
-                'printf "\\nCommand exited with status %s. Shell left open.\\n" "$status"',
+                'printf "\\nCommand exited with status %s. Shell left open.\\n" "$launcher_status"',
                 'exec "${SHELL:-/bin/zsh}" -l',
             ]
         )
-    lines.append('exit "$status"')
+    lines.append('exit "$launcher_status"')
     return "\n".join(lines) + "\n"
 
 
