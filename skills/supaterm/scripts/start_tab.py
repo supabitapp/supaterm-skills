@@ -92,11 +92,35 @@ def launcher_text(args, cwd, script):
     return "\n".join(lines) + "\n"
 
 
+def capture_pane(tab):
+    return subprocess.run(
+        [
+            "sp",
+            "pane",
+            "capture",
+            "--scope",
+            "scrollback",
+            "--lines",
+            "20",
+            tab["paneID"],
+        ],
+        text=True,
+        capture_output=True,
+    )
+
+
+def wait_for_pane(tab):
+    time.sleep(3.0)
+    capture_pane(tab)
+
+
 def send_launcher(tab, launcher_path, send_text):
+    wait_for_pane(tab)
     last_result = None
     for _ in range(20):
         result = subprocess.run(
-            ["sp", "pane", "send", "--newline", tab["paneID"], send_text],
+            ["sp", "pane", "send", tab["paneID"], "-"],
+            input=f"\x15{send_text}\n",
             text=True,
             capture_output=True,
         )

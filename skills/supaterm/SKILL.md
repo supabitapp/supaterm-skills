@@ -62,7 +62,7 @@ Trailing arguments after `--` are treated as a terminal startup command.
 sp tab new --script 'make worktree-create WORKTREE=exploration && exec wt exec exploration -- "${SHELL:-/bin/zsh}" -l'
 ```
 
-For multi-line or heavily quoted new-tab launches, use `scripts/start_tab.py`. It creates a plain Supaterm tab, writes a temporary shell launcher, and sends that launcher path with `sp pane send --newline`.
+For multi-line or heavily quoted new-tab launches, use `scripts/start_tab.py`. It creates a plain Supaterm tab, writes a temporary shell launcher, waits briefly for the pane, and sends that launcher path with `sp pane send`.
 
 ```bash
 scripts/start_tab.py --cwd "$PWD" -- git status
