@@ -23,6 +23,15 @@ Flags:
 - `--script <script>` runs shell script text as the terminal startup command
 - `--in <space>` targets a space selector or UUID
 
+For multi-line scripts or commands with heavy quoting, prefer the bundled launcher helper:
+
+```bash
+scripts/start_tab.py --cwd "$PWD" -- git status
+printf 'echo one\necho two\n' | scripts/start_tab.py --cwd "$PWD" --stdin
+```
+
+The helper starts a plain shell tab first, then sends a temporary launcher path into the pane with `sp pane send --newline`.
+
 ## Focus
 
 `sp tab focus [tab]` selects a tab.

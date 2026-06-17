@@ -1,6 +1,6 @@
 ---
 name: supaterm
-description: Control Supaterm spaces, tabs, panes, and coding-agent integrations with `sp`.
+description: Control Supaterm spaces, tabs, panes, coding-agent integrations, and new-tab task launches with `sp`. Use when an agent needs to launch commands, scripts, or multiline coding-agent tasks in Supaterm.
 ---
 
 Use this skill when you need to control Supaterm from a terminal that is already running inside Supaterm.
@@ -61,6 +61,15 @@ Trailing arguments after `--` are treated as a terminal startup command.
 ```bash
 sp tab new --script 'make worktree-create WORKTREE=exploration && exec wt exec exploration -- "${SHELL:-/bin/zsh}" -l'
 ```
+
+For multi-line or heavily quoted new-tab launches, use `scripts/start_tab.py`. It creates a plain Supaterm tab, writes a temporary shell launcher, and sends that launcher path with `sp pane send --newline`.
+
+```bash
+scripts/start_tab.py --cwd "$PWD" -- git status
+printf 'echo one\necho two\n' | scripts/start_tab.py --cwd "$PWD" --stdin
+```
+
+Read the JSON output for `tabID`, `paneID`, `launcherPath`, and `sendText`. Capture the tab later with `sp pane capture --scope scrollback --lines 160 <pane-uuid>`.
 
 Split panes and send commands:
 
