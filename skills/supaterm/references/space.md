@@ -1,6 +1,6 @@
 # Space Commands
 
-`sp space` creates, selects, renames, closes, and navigates spaces.
+`sp space` creates, selects, renames, destroys, and navigates spaces.
 
 ## Create
 
@@ -31,14 +31,14 @@ sp space rename Logs 1
 sp space rename Build <space-uuid>
 ```
 
-## Close
+## Destroy
 
-`sp space close [space]` closes a space.
+`sp space destroy -y [space]` destroys a space. Omit `-y` to confirm interactively.
 
 ```bash
-sp space close
-sp space close 1
-sp space close <space-uuid>
+sp space destroy -y
+sp space destroy -y 1
+sp space destroy -y <space-uuid>
 ```
 
 ## Navigate
@@ -58,5 +58,5 @@ Mutating `space` commands support the standard output flags:
 ```bash
 sp space new --json --focus Work
 sp space focus --plain 1
-sp space close --quiet 1
+sp space destroy -y --quiet 1
 ```
