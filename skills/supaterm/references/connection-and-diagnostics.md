@@ -65,9 +65,14 @@ sp onboard --plain
 
 ## Config
 
-Validate the default Supaterm settings file:
+Inspect and change Supaterm settings:
 
 ```bash
+sp config path
+sp config list
+sp config get updates.channel
+sp config set appearance.mode system
+sp config reset privacy.analytics_enabled
 sp config validate
 ```
 
