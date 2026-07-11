@@ -26,7 +26,7 @@ Effects:
 
 - `install-hooks` installs every supported Supaterm hook bridge
 - `claude` installs Supaterm hooks into `~/.claude/settings.json`
-- `codex` enables hooks, installs Supaterm hooks into `~/.codex/hooks.json`, and trusts those hooks in `~/.codex/config.toml`
+- `codex` requires Codex 0.144.1 or newer, enables hooks, installs Supaterm hooks into `~/.codex/hooks.json`, and registers native trust through Codex app-server
 
 ## Remove Hooks
 
@@ -37,7 +37,7 @@ sp agent remove-hook claude
 sp agent remove-hook codex
 ```
 
-Removing Codex hooks also removes Supaterm hook trust entries from `~/.codex/config.toml`.
+Removing Codex hooks also removes Supaterm hook trust through Codex app-server.
 
 ## Forward Hook Events
 
@@ -60,7 +60,7 @@ Use this when wiring an external agent hook system into Supaterm. This is lower-
 Pi integrations use this lower-level forwarding command from the Pi extension:
 
 ```bash
-printf '{"hook_event_name":"Notification","message":"Pi needs your attention"}' \
+printf '{"hook_event_name":"session_start","session_id":"session-1","source":"new"}' \
   | sp agent receive-agent-hook --agent pi
 ```
 
