@@ -2,45 +2,46 @@ import { spawn } from "node:child_process";
 import { basename } from "node:path";
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 
-const supatermCLIPath = process.env.SUPATERM_CLI_PATH;
-const supatermSurfaceID = process.env.SUPATERM_SURFACE_ID;
-const supatermSessionID = supatermSurfaceID
-  ? `pi-notify-supaterm-${supatermSurfaceID.toLowerCase()}`
-  : undefined;
-const supatermRunningHeartbeatMs = 5000;
 const taskCompleteThresholdMs = 15000;
-const defaultPermissionMode = "acceptEdits";
 const titleFrames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
 
 type SupatermHookEventName =
-  | "Notification"
-  | "PreToolUse"
-  | "SessionEnd"
-  | "SessionStart"
-  | "Stop";
+  | "agent_end"
+  | "agent_start"
+  | "session_shutdown"
+  | "session_start";
+export type PiStopReason = "aborted" | "error" | "length" | "stop" | "toolUse";
 
-type SupatermHookEvent = {
+export type SupatermHookEvent = {
   hook_event_name: SupatermHookEventName;
-  agent_type?: string;
   cwd: string;
-  last_assistant_message?: string;
   message?: string;
   model?: string;
-  notification_type?: string;
-  permission_mode?: string;
   reason?: string;
-  session_id?: string;
+  session_id: string;
   source: string;
+  stop_reason?: PiStopReason;
   title?: string;
 };
 
+export type PiNotifySupatermRuntime = {
+  cwd: string;
+  now: () => number;
+  notify: (title: string, body: string) => void;
+  supaterm?: {
+    send: (event: SupatermHookEvent) => Promise<void>;
+    sessionID: string;
+  };
+};
+
 type NotificationState = "Error" | "Task Complete" | "Truncated" | "Waiting";
+type NativeNotificationState = Exclude<NotificationState, "Task Complete">;
 
 type AssistantMessageLike = {
   role: "assistant";
   content?: Array<{ type?: string; text?: string }>;
   errorMessage?: string;
-  stopReason?: string;
+  stopReason?: PiStopReason;
 };
 
 type ToolEventLike = {
@@ -67,28 +68,27 @@ type TitleContext = {
   };
 };
 
-function isSupatermPane(): boolean {
-  return Boolean(supatermCLIPath && supatermSessionID);
-}
-
-function createRunState(): RunState {
+function createRunState(now: () => number): RunState {
   return {
     bashCount: 0,
     changedFiles: new Set<string>(),
     readFiles: new Set<string>(),
     searchCount: 0,
-    startedAt: Date.now(),
+    startedAt: now(),
     toolCalls: 0,
   };
 }
 
-async function sendSupatermHook(event: SupatermHookEvent): Promise<void> {
-  if (!supatermCLIPath || !supatermSessionID) {
+async function sendSupatermHook(
+  cliPath: string | undefined,
+  event: SupatermHookEvent
+): Promise<void> {
+  if (!cliPath) {
     return;
   }
 
   await new Promise<void>((resolve) => {
-    const child = spawn(supatermCLIPath, ["agent", "receive-agent-hook", "--agent", "pi"], {
+    const child = spawn(cliPath, ["agent", "receive-agent-hook", "--agent", "pi"], {
       env: process.env,
       stdio: ["pipe", "ignore", "ignore"],
     });
@@ -99,28 +99,31 @@ async function sendSupatermHook(event: SupatermHookEvent): Promise<void> {
     child.on("close", finish);
     child.stdin?.on("error", finish);
     child.stdin?.end(
-      JSON.stringify({
-        ...event,
-        session_id: supatermSessionID,
-      })
+      JSON.stringify(event)
     );
   });
 }
 
 function supatermHookEvent(
   hookEventName: SupatermHookEventName,
+  runtime: PiNotifySupatermRuntime,
   extra: Omit<SupatermHookEvent, "cwd" | "hook_event_name" | "session_id" | "source"> = {}
 ): SupatermHookEvent {
+  const sessionID = runtime.supaterm?.sessionID;
+  if (!sessionID) {
+    throw new Error("Supaterm session is unavailable");
+  }
+
   return {
     ...extra,
-    cwd: process.cwd(),
+    cwd: runtime.cwd,
     hook_event_name: hookEventName,
-    session_id: supatermSessionID,
+    session_id: sessionID,
     source: "pi-notify-supaterm",
   };
 }
 
-function notify(title: string, body: string): void {
+function sendTerminalNotification(title: string, body: string): void {
   const sTitle = normalizeText(title);
   const sBody = normalizeText(body);
   process.stdout.write(`\x1b]777;notify;${sTitle};${sBody}\x07`);
@@ -258,6 +261,28 @@ function summarizeRunError(
   return summary.length > 0 ? truncate(summary, 120) : undefined;
 }
 
+function nativeNotificationState(
+  message: AssistantMessageLike | undefined
+): NativeNotificationState {
+  if (message?.stopReason === "error" || message?.stopReason === "aborted") {
+    return "Error";
+  }
+  if (message?.stopReason === "length") {
+    return "Truncated";
+  }
+  return "Waiting";
+}
+
+function nativeFallbackBody(state: NativeNotificationState): string {
+  if (state === "Error") {
+    return "Agent run failed";
+  }
+  if (state === "Truncated") {
+    return "Response truncated";
+  }
+  return "Finished and waiting for input";
+}
+
 function summarizeSuccess(state: RunState, durationMs: number, includeDuration: boolean): string {
   const changedCount = state.changedFiles.size;
   if (changedCount === 1) {
@@ -324,15 +349,16 @@ function hasTitleUI(ctx: unknown): ctx is TitleContext {
   );
 }
 
-export default function (pi: ExtensionAPI) {
-  const projectName = basename(process.cwd());
-  let runState = createRunState();
+export function registerPiNotifySupaterm(
+  pi: ExtensionAPI,
+  runtime: PiNotifySupatermRuntime
+): void {
+  const projectName = basename(runtime.cwd);
+  let runState = createRunState(runtime.now);
   let currentSessionName: string | undefined;
   let currentTool: string | undefined;
   let spinnerFrameIndex = 0;
   let spinnerTimer: ReturnType<typeof setInterval> | undefined;
-  let supatermHeartbeatTimer: ReturnType<typeof setInterval> | undefined;
-  let pendingSupatermHeartbeat = Promise.resolve();
   let titleContext: TitleContext | undefined;
 
   function setTitle(title: string): void {
@@ -375,49 +401,25 @@ export default function (pi: ExtensionAPI) {
     }, 250);
   }
 
-  function queueSupatermRunningHeartbeat(): Promise<void> {
-    if (!isSupatermPane()) {
-      return Promise.resolve();
-    }
-
-    pendingSupatermHeartbeat = pendingSupatermHeartbeat.then(() =>
-      sendSupatermHook(
-        supatermHookEvent("PreToolUse", {
-          permission_mode: defaultPermissionMode,
-        })
-      )
-    );
-    return pendingSupatermHeartbeat;
-  }
-
-  function startSupatermRunningHeartbeat(): void {
-    stopSupatermRunningHeartbeat();
-    void queueSupatermRunningHeartbeat();
-    supatermHeartbeatTimer = setInterval(() => {
-      void queueSupatermRunningHeartbeat();
-    }, supatermRunningHeartbeatMs);
-  }
-
-  async function stopSupatermRunningHeartbeat(): Promise<void> {
-    if (supatermHeartbeatTimer) {
-      clearInterval(supatermHeartbeatTimer);
-      supatermHeartbeatTimer = undefined;
-    }
-    await pendingSupatermHeartbeat;
-  }
-
   pi.on("session_start", async (_event, ctx) => {
-    if (!hasTitleUI(ctx)) {
-      return;
+    currentSessionName = pi.getSessionName();
+    if (hasTitleUI(ctx)) {
+      titleContext = ctx;
+      updateIdleTitle();
     }
 
-    titleContext = ctx;
-    currentSessionName = pi.getSessionName();
-    updateIdleTitle();
+    if (runtime.supaterm) {
+      await runtime.supaterm.send(
+        supatermHookEvent("session_start", runtime, {
+          model: cleanModelName(ctx.model?.name ?? "Pi"),
+          title: "Pi",
+        })
+      );
+    }
   });
 
   pi.on("agent_start", async (_event, ctx) => {
-    runState = createRunState();
+    runState = createRunState(runtime.now);
     currentSessionName = pi.getSessionName();
     currentTool = undefined;
 
@@ -426,15 +428,12 @@ export default function (pi: ExtensionAPI) {
       startSpinner();
     }
 
-    if (isSupatermPane()) {
-      await sendSupatermHook(
-        supatermHookEvent("SessionStart", {
-          agent_type: "assistant",
+    if (runtime.supaterm) {
+      await runtime.supaterm.send(
+        supatermHookEvent("agent_start", runtime, {
           model: cleanModelName(ctx.model?.name ?? "Pi"),
-          title: "Pi",
         })
       );
-      startSupatermRunningHeartbeat();
     }
   });
 
@@ -488,13 +487,29 @@ export default function (pi: ExtensionAPI) {
     }
   });
 
-  pi.on("agent_end", async (event, ctx) => {
-    const durationMs = Date.now() - runState.startedAt;
-    const projectName = basename(process.cwd());
+  pi.on("agent_end", async (event) => {
     const sessionName = pi.getSessionName();
     const assistantMessage = getLastAssistantMessage(event.messages);
     const assistantText = summarizeAssistantText(assistantMessage);
     const runError = summarizeRunError(assistantMessage, runState.firstToolError);
+    const nativeState = nativeNotificationState(assistantMessage);
+    const nativeBody = runError ?? assistantText ?? nativeFallbackBody(nativeState);
+
+    currentTool = undefined;
+    stopSpinner();
+
+    if (runtime.supaterm) {
+      updateIdleTitle(nativeState);
+      await runtime.supaterm.send(
+        supatermHookEvent("agent_end", runtime, {
+          message: nativeBody,
+          stop_reason: assistantMessage?.stopReason,
+        })
+      );
+      return;
+    }
+
+    const durationMs = runtime.now() - runState.startedAt;
     const isTruncated = assistantMessage?.stopReason === "length";
     const isTaskComplete = runState.changedFiles.size > 0 || durationMs >= taskCompleteThresholdMs;
 
@@ -516,43 +531,13 @@ export default function (pi: ExtensionAPI) {
     }
 
     const body = runError ? fallbackBody : assistantText ?? fallbackBody;
-    currentTool = undefined;
-    stopSpinner();
     updateIdleTitle(state);
 
-    if (isSupatermPane()) {
-      await stopSupatermRunningHeartbeat();
-      if (state === "Task Complete") {
-        await sendSupatermHook(
-          supatermHookEvent("Stop", {
-            last_assistant_message: body,
-            permission_mode: defaultPermissionMode,
-          })
-        );
-        return;
-      }
-
-      await sendSupatermHook(
-        supatermHookEvent("Notification", {
-          message: body,
-          notification_type: state === "Error" ? "error" : "request_input",
-          title: state,
-        })
-      );
-      await sendSupatermHook(
-        supatermHookEvent("Stop", {
-          permission_mode: defaultPermissionMode,
-        })
-      );
-      return;
-    }
-
-    notify(buildBody(body, projectName, sessionName), body);
+    runtime.notify(buildBody(body, projectName, sessionName), body);
   });
 
   pi.on("session_shutdown", async (_event, ctx) => {
     stopSpinner();
-    await stopSupatermRunningHeartbeat();
 
     if (hasTitleUI(ctx)) {
       titleContext = ctx;
@@ -560,13 +545,33 @@ export default function (pi: ExtensionAPI) {
       updateIdleTitle();
     }
 
-    if (isSupatermPane()) {
-      await sendSupatermHook(
-        supatermHookEvent("SessionEnd", {
+    if (runtime.supaterm) {
+      await runtime.supaterm.send(
+        supatermHookEvent("session_shutdown", runtime, {
           reason: "exit",
-          title: "Pi",
         })
       );
     }
+  });
+}
+
+export default function (pi: ExtensionAPI): void {
+  const cliPath = process.env.SUPATERM_CLI_PATH;
+  const surfaceID = process.env.SUPATERM_SURFACE_ID;
+  const sessionID = surfaceID
+    ? `pi-notify-supaterm-${surfaceID.toLowerCase()}`
+    : undefined;
+  const supaterm = cliPath && sessionID
+    ? {
+        send: (event: SupatermHookEvent) => sendSupatermHook(cliPath, event),
+        sessionID,
+      }
+    : undefined;
+
+  registerPiNotifySupaterm(pi, {
+    cwd: process.cwd(),
+    now: Date.now,
+    notify: sendTerminalNotification,
+    supaterm,
   });
 }

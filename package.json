@@ -10,6 +10,10 @@
   ],
   "license": "Unlicense",
   "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/pi-notify-supaterm.test.ts"
+  },
   "peerDependencies": {
     "@mariozechner/pi-ai": "*",
     "@mariozechner/pi-coding-agent": "*"
