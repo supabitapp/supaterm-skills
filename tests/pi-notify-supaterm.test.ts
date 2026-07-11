@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
+import { chmod, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
-import {
+import piNotifySupaterm, {
   registerPiNotifySupaterm,
   type PiStopReason,
   type PiNotifySupatermRuntime,
@@ -159,4 +162,50 @@ test("non-Supaterm runs retain their terminal notification", async () => {
   assert.deepEqual(notifications, [
     ["Ready for review. · repo · Review", "Ready for review."],
   ]);
+});
+
+test("Pi forwards its native process ID to Supaterm", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "pi-notify-supaterm-"));
+  const executablePath = join(directory, "sp");
+  const argumentsPath = join(directory, "arguments");
+  const previousCLIPath = process.env.SUPATERM_CLI_PATH;
+  const previousArgumentsPath = process.env.SUPATERM_ARGUMENTS_PATH;
+
+  try {
+    await writeFile(
+      executablePath,
+      "#!/bin/sh\nprintf '%s\\n' \"$@\" > \"$SUPATERM_ARGUMENTS_PATH\"\ncat >/dev/null\n"
+    );
+    await chmod(executablePath, 0o755);
+    process.env.SUPATERM_CLI_PATH = executablePath;
+    process.env.SUPATERM_ARGUMENTS_PATH = argumentsPath;
+
+    const { handlers, pi } = makePi();
+    piNotifySupaterm(pi as never);
+    await handlers.get("session_start")?.(
+      { reason: "startup" },
+      context("pi-session-1")
+    );
+
+    assert.deepEqual((await readFile(argumentsPath, "utf8")).trim().split("\n"), [
+      "agent",
+      "receive-agent-hook",
+      "--agent",
+      "pi",
+      "--pid",
+      String(process.pid),
+    ]);
+  } finally {
+    if (previousCLIPath === undefined) {
+      delete process.env.SUPATERM_CLI_PATH;
+    } else {
+      process.env.SUPATERM_CLI_PATH = previousCLIPath;
+    }
+    if (previousArgumentsPath === undefined) {
+      delete process.env.SUPATERM_ARGUMENTS_PATH;
+    } else {
+      process.env.SUPATERM_ARGUMENTS_PATH = previousArgumentsPath;
+    }
+    await rm(directory, { force: true, recursive: true });
+  }
 });
