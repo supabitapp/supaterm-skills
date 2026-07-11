@@ -27,8 +27,14 @@ function makeRuntime(events: SupatermHookEvent[]): PiNotifySupatermRuntime {
     notify: () => {},
     supaterm: {
       send: async (event) => events.push(event),
-      sessionID: "pi-surface-1",
     },
+  };
+}
+
+function context(sessionID: string) {
+  return {
+    model: { name: "Claude Sonnet (High)" },
+    sessionManager: { getSessionId: () => sessionID },
   };
 }
 
@@ -45,22 +51,25 @@ test("Supaterm receives one native lifecycle event per Pi callback", async () =>
   const events: SupatermHookEvent[] = [];
   const { handlers, pi } = makePi();
   registerPiNotifySupaterm(pi as never, makeRuntime(events));
-  const context = { model: { name: "Claude Sonnet (High)" } };
+  const firstSession = context("pi-session-1");
+  const secondSession = context("pi-session-2");
 
-  await handlers.get("session_start")?.({}, context);
-  await handlers.get("agent_start")?.({}, context);
+  await handlers.get("session_start")?.({ reason: "startup" }, firstSession);
+  await handlers.get("agent_start")?.({}, firstSession);
   await handlers.get("agent_end")?.(
     { messages: [assistant("stop", "Done.")] },
-    context
+    firstSession
   );
-  await handlers.get("session_shutdown")?.({}, context);
+  await handlers.get("session_shutdown")?.({ reason: "resume" }, firstSession);
+  await handlers.get("session_start")?.({ reason: "resume" }, secondSession);
 
   assert.deepEqual(events, [
     {
       cwd: "/repo",
       hook_event_name: "session_start",
       model: "Claude Sonnet",
-      session_id: "pi-surface-1",
+      reason: "startup",
+      session_id: "pi-session-1",
       source: "pi-notify-supaterm",
       title: "Pi",
     },
@@ -68,23 +77,32 @@ test("Supaterm receives one native lifecycle event per Pi callback", async () =>
       cwd: "/repo",
       hook_event_name: "agent_start",
       model: "Claude Sonnet",
-      session_id: "pi-surface-1",
+      session_id: "pi-session-1",
       source: "pi-notify-supaterm",
     },
     {
       cwd: "/repo",
       hook_event_name: "agent_end",
       message: "Done.",
-      session_id: "pi-surface-1",
+      session_id: "pi-session-1",
       source: "pi-notify-supaterm",
       stop_reason: "stop",
     },
     {
       cwd: "/repo",
       hook_event_name: "session_shutdown",
-      reason: "exit",
-      session_id: "pi-surface-1",
+      reason: "resume",
+      session_id: "pi-session-1",
       source: "pi-notify-supaterm",
+    },
+    {
+      cwd: "/repo",
+      hook_event_name: "session_start",
+      model: "Claude Sonnet",
+      reason: "resume",
+      session_id: "pi-session-2",
+      source: "pi-notify-supaterm",
+      title: "Pi",
     },
   ]);
 });
@@ -96,11 +114,11 @@ test("Pi forwards native error and truncation outcomes", async () => {
 
   await handlers.get("agent_end")?.(
     { messages: [assistant("error", "Try again", "Provider failed")] },
-    {}
+    context("pi-session-1")
   );
   await handlers.get("agent_end")?.(
     { messages: [assistant("length", "Partial response")] },
-    {}
+    context("pi-session-1")
   );
 
   assert.deepEqual(events, [
@@ -108,7 +126,7 @@ test("Pi forwards native error and truncation outcomes", async () => {
       cwd: "/repo",
       hook_event_name: "agent_end",
       message: "Provider failed",
-      session_id: "pi-surface-1",
+      session_id: "pi-session-1",
       source: "pi-notify-supaterm",
       stop_reason: "error",
     },
@@ -116,7 +134,7 @@ test("Pi forwards native error and truncation outcomes", async () => {
       cwd: "/repo",
       hook_event_name: "agent_end",
       message: "Partial response",
-      session_id: "pi-surface-1",
+      session_id: "pi-session-1",
       source: "pi-notify-supaterm",
       stop_reason: "length",
     },

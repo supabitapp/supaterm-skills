@@ -30,7 +30,6 @@ export type PiNotifySupatermRuntime = {
   notify: (title: string, body: string) => void;
   supaterm?: {
     send: (event: SupatermHookEvent) => Promise<void>;
-    sessionID: string;
   };
 };
 
@@ -107,13 +106,9 @@ async function sendSupatermHook(
 function supatermHookEvent(
   hookEventName: SupatermHookEventName,
   runtime: PiNotifySupatermRuntime,
+  sessionID: string,
   extra: Omit<SupatermHookEvent, "cwd" | "hook_event_name" | "session_id" | "source"> = {}
 ): SupatermHookEvent {
-  const sessionID = runtime.supaterm?.sessionID;
-  if (!sessionID) {
-    throw new Error("Supaterm session is unavailable");
-  }
-
   return {
     ...extra,
     cwd: runtime.cwd,
@@ -401,7 +396,7 @@ export function registerPiNotifySupaterm(
     }, 250);
   }
 
-  pi.on("session_start", async (_event, ctx) => {
+  pi.on("session_start", async (event, ctx) => {
     currentSessionName = pi.getSessionName();
     if (hasTitleUI(ctx)) {
       titleContext = ctx;
@@ -410,8 +405,9 @@ export function registerPiNotifySupaterm(
 
     if (runtime.supaterm) {
       await runtime.supaterm.send(
-        supatermHookEvent("session_start", runtime, {
+        supatermHookEvent("session_start", runtime, ctx.sessionManager.getSessionId(), {
           model: cleanModelName(ctx.model?.name ?? "Pi"),
+          reason: event.reason,
           title: "Pi",
         })
       );
@@ -430,7 +426,7 @@ export function registerPiNotifySupaterm(
 
     if (runtime.supaterm) {
       await runtime.supaterm.send(
-        supatermHookEvent("agent_start", runtime, {
+        supatermHookEvent("agent_start", runtime, ctx.sessionManager.getSessionId(), {
           model: cleanModelName(ctx.model?.name ?? "Pi"),
         })
       );
@@ -487,7 +483,7 @@ export function registerPiNotifySupaterm(
     }
   });
 
-  pi.on("agent_end", async (event) => {
+  pi.on("agent_end", async (event, ctx) => {
     const sessionName = pi.getSessionName();
     const assistantMessage = getLastAssistantMessage(event.messages);
     const assistantText = summarizeAssistantText(assistantMessage);
@@ -501,7 +497,7 @@ export function registerPiNotifySupaterm(
     if (runtime.supaterm) {
       updateIdleTitle(nativeState);
       await runtime.supaterm.send(
-        supatermHookEvent("agent_end", runtime, {
+        supatermHookEvent("agent_end", runtime, ctx.sessionManager.getSessionId(), {
           message: nativeBody,
           stop_reason: assistantMessage?.stopReason,
         })
@@ -536,7 +532,7 @@ export function registerPiNotifySupaterm(
     runtime.notify(buildBody(body, projectName, sessionName), body);
   });
 
-  pi.on("session_shutdown", async (_event, ctx) => {
+  pi.on("session_shutdown", async (event, ctx) => {
     stopSpinner();
 
     if (hasTitleUI(ctx)) {
@@ -547,8 +543,8 @@ export function registerPiNotifySupaterm(
 
     if (runtime.supaterm) {
       await runtime.supaterm.send(
-        supatermHookEvent("session_shutdown", runtime, {
-          reason: "exit",
+        supatermHookEvent("session_shutdown", runtime, ctx.sessionManager.getSessionId(), {
+          reason: event.reason,
         })
       );
     }
@@ -557,14 +553,9 @@ export function registerPiNotifySupaterm(
 
 export default function (pi: ExtensionAPI): void {
   const cliPath = process.env.SUPATERM_CLI_PATH;
-  const surfaceID = process.env.SUPATERM_SURFACE_ID;
-  const sessionID = surfaceID
-    ? `pi-notify-supaterm-${surfaceID.toLowerCase()}`
-    : undefined;
-  const supaterm = cliPath && sessionID
+  const supaterm = cliPath
     ? {
         send: (event: SupatermHookEvent) => sendSupatermHook(cliPath, event),
-        sessionID,
       }
     : undefined;
 
