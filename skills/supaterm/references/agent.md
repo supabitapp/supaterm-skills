@@ -60,8 +60,8 @@ Use this when wiring an external agent hook system into Supaterm. This is lower-
 Pi integrations use this lower-level forwarding command from the Pi extension:
 
 ```bash
-printf '{"hook_event_name":"session_start","session_id":"session-1","source":"new"}' \
-  | sp agent receive-agent-hook --agent pi
+printf '{"hook_event_name":"session_start","session_id":"session-1","source":"pi-notify-supaterm"}' \
+  | sp agent receive-agent-hook --agent pi --pid 123
 ```
 
 ## Output
