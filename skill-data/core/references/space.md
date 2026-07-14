@@ -1,4 +1,4 @@
-# Space Commands
+# Space commands
 
 `sp space` creates, selects, renames, destroys, and navigates spaces.
 

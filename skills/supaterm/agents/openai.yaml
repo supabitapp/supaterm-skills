@@ -1,4 +1,4 @@
 interface:
   display_name: "Supaterm"
-  short_description: "Control Supaterm tabs, panes, and launches"
-  default_prompt: "Use $supaterm to control Supaterm and launch multiline tasks in new tabs."
+  short_description: "Control Supaterm spaces, tabs, panes, and agents"
+  default_prompt: "Use $supaterm and load the bundled guide with `sp skills get core` before controlling Supaterm."

@@ -1,4 +1,4 @@
-# Pane Commands
+# Pane commands
 
 `sp pane` splits, focuses, closes, resizes, captures, checks readiness, notifies, and sends text to panes.
 
@@ -51,6 +51,14 @@ printf 'pwd' | sp pane send
 ```
 
 Use `-` to read the text argument from stdin.
+
+Use `--submit` to paste the complete text and then press Enter as a separate input event:
+
+```bash
+sp pane send --submit <pane-uuid> - < prompt.txt
+```
+
+Use `--newline` only to append a literal newline. Do not use it to submit multiline prompts to an interactive coding agent.
 
 ## Capture
 

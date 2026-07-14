@@ -1,4 +1,4 @@
-# Targeting And Selectors
+# Targeting and selectors
 
 Use `sp ls --json` to discover the current Supaterm tree, including selectors and UUIDs. `sp ls` and `sp ls --plain` include pane display titles.
 

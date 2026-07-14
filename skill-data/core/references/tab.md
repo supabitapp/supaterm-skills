@@ -1,4 +1,4 @@
-# Tab Commands
+# Tab commands
 
 `sp tab` creates, selects, pins, unpins, renames, closes, and navigates tabs.
 
@@ -9,7 +9,7 @@
 ```bash
 sp tab new -- ping 1.1.1.1
 sp tab new --script 'echo hi; pwd'
-sp tab new --script 'make worktree-create WORKTREE=exploration && exec wt exec exploration -- "${SHELL:-/bin/zsh}" -l'
+sp tab new --script 'printf "ready\n"; exec "${SHELL:-/bin/zsh}" -l'
 sp tab new --focus -- git status
 sp tab new --in 1 --cwd ~/tmp -- ping 1.1.1.1
 sp tab new --in <space-uuid> --cwd ~/tmp -- ping 1.1.1.1
@@ -23,14 +23,7 @@ Flags:
 - `--script <script>` runs shell script text as the terminal startup command
 - `--in <space>` targets a space selector or UUID
 
-For multi-line scripts or commands with heavy quoting, prefer the bundled launcher helper:
-
-```bash
-scripts/start_tab.py --cwd "$PWD" -- git status
-printf 'echo one\necho two\n' | scripts/start_tab.py --cwd "$PWD" --stdin
-```
-
-The helper starts a plain shell tab first, waits for pane readiness, then sends a temporary launcher path into the pane with `sp pane send`.
+Pass commands as trailing arguments after `--` so `sp` preserves each argument. Use `sp skills get coding-agents` for multiline coding-agent prompts.
 
 ## Focus
 

@@ -7,10 +7,10 @@
 Install Supaterm's bundled agent skill:
 
 ```bash
-sp agent install-skill
+sp skills install
 ```
 
-The command installs `~/.agents/skills/supaterm` as a symlink to the skill bundled with the running Supaterm app. Existing Supaterm skill directories or stale symlinks are replaced.
+The command copies the stable discovery skill bundled with the running Supaterm version to `~/.agents/skills/supaterm`. Existing Supaterm skill directories or symlinks are replaced. Detailed instructions remain bundled with `sp` and are loaded through `sp skills get`.
 
 ## Install Hooks
 
@@ -51,9 +51,11 @@ printf '{"hook_event_name":"Notification","message":"Claude needs your attention
 Installed hooks pass the parent process ID:
 
 ```bash
-printf '{"hook_event_name":"PreToolUse","session_id":"session-1"}' \
+printf '{"hook_event_name":"PreToolUse","session_id":"session-1","cwd":"/tmp/project"}' \
   | sp agent receive-agent-hook --agent codex --pid 123
 ```
+
+Root hook payloads should include the agent's absolute `cwd`. Supaterm uses it for the agent panel Workspace row, Git status, and forked session working directory. Child-agent directories do not replace the root workspace.
 
 Use this when wiring an external agent hook system into Supaterm. This is lower-level than `install-hook` and `remove-hook`.
 
@@ -66,4 +68,4 @@ printf '{"hook_event_name":"session_start","session_id":"session-1","source":"pi
 
 ## Output
 
-`receive-agent-hook` is a forwarding command. `install-skill`, `install-hook`, and `remove-hook` report failures through stderr and exit status.
+`receive-agent-hook` is a forwarding command. `skills install`, `install-hook`, and `remove-hook` report failures through stderr and exit status.
