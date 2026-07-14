@@ -51,9 +51,11 @@ printf '{"hook_event_name":"Notification","message":"Claude needs your attention
 Installed hooks pass the parent process ID:
 
 ```bash
-printf '{"hook_event_name":"PreToolUse","session_id":"session-1"}' \
+printf '{"hook_event_name":"PreToolUse","session_id":"session-1","cwd":"/tmp/project"}' \
   | sp agent receive-agent-hook --agent codex --pid 123
 ```
+
+Root hook payloads should include the agent's absolute `cwd`. Supaterm uses it for the agent panel Workspace row, Git status, and forked session working directory. Child-agent directories do not replace the root workspace.
 
 Use this when wiring an external agent hook system into Supaterm. This is lower-level than `install-hook` and `remove-hook`.
 
