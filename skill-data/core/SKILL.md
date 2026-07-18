@@ -80,6 +80,18 @@ Trailing arguments after `--` are treated as a terminal startup command.
 
 ## Deep-Dive References
 
+Load every reference:
+
+```bash
+sp skills get core --full
+```
+
+Resolve the version-matched directory when reading one reference directly:
+
+```bash
+sp skills path core
+```
+
 - [Connection and diagnostics](references/connection-and-diagnostics.md)
 - [Targeting and selectors](references/targeting-and-selectors.md)
 - [Space commands](references/space.md)

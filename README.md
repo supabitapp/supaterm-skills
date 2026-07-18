@@ -7,6 +7,8 @@ Public installables for Supaterm.
 ```bash
 sp skills install
 sp skills get core
+sp skills get core --full
+sp skills path core
 sp skills get coding-agents
 ```
 

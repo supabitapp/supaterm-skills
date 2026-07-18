@@ -17,6 +17,12 @@ Load the complete command references when needed:
 sp skills get core --full
 ```
 
+Resolve the bundled directory when reading one reference directly:
+
+```bash
+sp skills path core
+```
+
 Load the coding-agent workflow before launching or prompting a coding agent:
 
 ```bash
