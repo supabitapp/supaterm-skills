@@ -1,6 +1,6 @@
 ---
 name: core
-description: Core Supaterm CLI guide for controlling spaces, tabs, panes, selectors, diagnostics, settings, and coding-agent integrations with `sp`. Read this before running Supaterm commands.
+description: Core Supaterm CLI guide for controlling spaces, tab groups, tabs, panes, selectors, diagnostics, settings, and coding-agent integrations with `sp`. Read this before running Supaterm commands.
 ---
 
 # Supaterm core
@@ -10,6 +10,7 @@ Use `sp` to control Supaterm from a terminal already running inside Supaterm. Ru
 ## Terminology
 
 - Space: the top-level container that contains multiple tabs, users might use this to separate work / life profile.
+- Group: an ordered collection of tabs inside a space
 - Tab: a terminal tab inside a space
 - Pane: a split terminal region inside a tab
 
@@ -56,6 +57,15 @@ sp tab pin 1/2
 sp tab unpin 1/2
 ```
 
+Create a group and place tabs in it:
+
+```bash
+sp group new Build --color blue
+sp tab new --group Build -- git status
+sp tab move 1/2 --group Build
+sp group collapse Build
+```
+
 Trailing arguments after `--` are treated as a terminal startup command.
 
 `--script` runs shell script text as the terminal startup command. End scripts with `exec "${SHELL:-/bin/zsh}" -l` when the tab or pane should stay open.
@@ -95,6 +105,7 @@ sp skills path core
 - [Connection and diagnostics](references/connection-and-diagnostics.md)
 - [Targeting and selectors](references/targeting-and-selectors.md)
 - [Space commands](references/space.md)
+- [Group commands](references/group.md)
 - [Tab commands](references/tab.md)
 - [Pane commands](references/pane.md)
 - [Agent commands](references/agent.md)

@@ -1,6 +1,6 @@
 # Tab commands
 
-`sp tab` creates, selects, pins, unpins, renames, closes, and navigates tabs.
+`sp tab` creates, selects, moves, pins, unpins, renames, closes, and navigates tabs.
 
 ## Create
 
@@ -11,6 +11,9 @@ sp tab new -- ping 1.1.1.1
 sp tab new --script 'echo hi; pwd'
 sp tab new --script 'printf "ready\n"; exec "${SHELL:-/bin/zsh}" -l'
 sp tab new --focus -- git status
+sp tab new --group Build -- git status
+sp tab new --group <group-uuid>
+sp tab new --root
 sp tab new --in 1 --cwd ~/tmp -- ping 1.1.1.1
 sp tab new --in <space-uuid> --cwd ~/tmp -- ping 1.1.1.1
 ```
@@ -22,8 +25,25 @@ Flags:
 - `--cwd <path>` sets the starting working directory
 - `--script <script>` runs shell script text as the terminal startup command
 - `--in <space>` targets a space selector or UUID
+- `--group <group>` creates the tab in a group selected by exact title or UUID
+- `--root` creates the tab at the space root
+
+Do not combine `--group` and `--root`. When both are omitted, a new tab inherits the current tab's group when possible and otherwise appears at the space root.
 
 Pass commands as trailing arguments after `--` so `sp` preserves each argument. Use `sp skills get coding-agents` for multiline coding-agent prompts.
+
+## Move
+
+`sp tab move [tab]` moves a tab into a group or to the space root. `--index` is a 1-based index within the destination.
+
+```bash
+sp tab move --group Build
+sp tab move 1/2 --group <group-uuid> --index 1
+sp tab move --root
+sp tab move <tab-uuid> --root --pin --index 1
+```
+
+Provide exactly one of `--group` or `--root`. `--pin` is valid only with `--root`.
 
 ## Focus
 
@@ -47,7 +67,7 @@ sp tab rename Deploy <tab-uuid>
 
 ## Pin
 
-`sp tab pin [tab]` pins a tab.
+`sp tab pin [tab]` pins a tab. Pinning a grouped tab extracts it to the pinned space root.
 
 ```bash
 sp tab pin
