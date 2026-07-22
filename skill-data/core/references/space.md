@@ -4,7 +4,7 @@
 
 ## Create
 
-`sp space new <name>` creates a space. `--focus` switches to it immediately.
+`sp space new <name>` creates a space and its first tab without changing the current selection. `--focus` switches to it immediately. Creation fails without leaving an empty space when the name is invalid or already used.
 
 ```bash
 sp space new Work

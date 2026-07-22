@@ -44,6 +44,8 @@ Group targets use either a UUID or an exact title. UUIDs resolve globally. Title
 
 `sp ls --json` returns the full tree with generic object `id` fields. Each space contains ordered `rootItems`: root tabs have `kind: "tab"`, while groups have `kind: "group"` and contain their ordered `tabs`.
 
+The CLI resolves selectors from a fresh tree and sends stable IDs. Reordering a space, tab, or pane cannot make the app act on a different item.
+
 Creation commands return typed IDs instead:
 
 ```bash
