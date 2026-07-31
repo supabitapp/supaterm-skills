@@ -14,7 +14,7 @@ another window.
 `sp space ls` lists every space in order with the index used by space selectors. `*` marks the space
 this window displays. `cold` means this window has not opened that space yet in this run, so its
 tabs come from the saved layout and its panes have no live terminal until the window displays the
-space or a command creates a tab there.
+space or a command targets one of its tabs or panes.
 
 ```bash
 sp space ls

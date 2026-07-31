@@ -47,7 +47,8 @@ Provide exactly one of `--group` or `--root`. `--pin` is valid only with `--root
 
 ## Focus
 
-`sp tab focus [tab]` selects a tab.
+`sp tab focus [tab]` selects a tab. It switches the window to the tab's space when the tab sits in
+another one.
 
 ```bash
 sp tab focus

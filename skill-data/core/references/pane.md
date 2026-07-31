@@ -28,6 +28,8 @@ Flags:
 
 ## Focus And Close
 
+`sp pane focus` switches the window to the pane's space when the pane sits in another one.
+
 ```bash
 sp pane focus
 sp pane focus 1/2/3
@@ -72,7 +74,7 @@ sp pane capture --json <pane-uuid>
 
 ## Health And Readiness
 
-`sp pane health` reports whether a pane is ready for input. `sp pane wait-ready` waits until readiness is true or the timeout expires.
+`sp pane health` reports whether a pane is ready for input. `sp pane wait-ready` waits until readiness is true or the timeout expires. A pane stays ready while its space is off screen; the report also says whether the window shows it.
 
 ```bash
 sp pane health <pane-uuid> --json
