@@ -1,14 +1,15 @@
 # Space commands
 
-`sp space` creates, selects, renames, destroys, and navigates spaces.
+`sp space` creates, selects, renames, recolors, destroys, and navigates spaces.
 
 ## Create
 
-`sp space new <name>` creates a space and its first tab without changing the current selection. `--focus` switches to it immediately. Creation fails without leaving an empty space when the name is invalid or already used.
+`sp space new <name>` creates a space and its first tab without changing the current selection. `--focus` switches to it immediately. `--color` tints the new space's window chrome. Creation fails without leaving an empty space when the name is invalid or already used.
 
 ```bash
 sp space new Work
 sp space new --focus Build
+sp space new --color green Work
 ```
 
 ## Focus
@@ -29,6 +30,16 @@ sp space focus <space-uuid>
 sp space rename Work
 sp space rename Logs 1
 sp space rename Build <space-uuid>
+```
+
+## Color
+
+`sp space color <color> [space]` tints a space's window chrome. Colors: neutral, red, orange, yellow, green, blue, pink, purple. Neutral removes the tint.
+
+```bash
+sp space color green
+sp space color purple 1
+sp space color neutral <space-uuid>
 ```
 
 ## Destroy
