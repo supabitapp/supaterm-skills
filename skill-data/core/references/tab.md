@@ -4,7 +4,7 @@
 
 ## Create
 
-`sp tab new` creates a tab in the current space when run inside Supaterm. Use `--in` to target a specific space. Trailing arguments after `--` are treated as a terminal startup command. `--script` runs shell script text as the terminal startup command.
+`sp tab new` creates a tab in the space this window displays when run inside Supaterm. Use `--in` to target another space in the same window; the space opens its saved tabs first when this window has not displayed it yet, and `--focus` also switches the window to that space. Trailing arguments after `--` are treated as a terminal startup command. `--script` runs shell script text as the terminal startup command.
 
 ```bash
 sp tab new -- ping 1.1.1.1
@@ -24,7 +24,7 @@ Flags:
 - `--no-focus` leaves focus unchanged
 - `--cwd <path>` sets the starting working directory
 - `--script <script>` runs shell script text as the terminal startup command
-- `--in <space>` targets a space selector or UUID
+- `--in <space>` targets a space selector or UUID inside this window
 - `--group <group>` creates the tab in a group selected by exact title or UUID
 - `--root` creates the tab at the space root
 
@@ -97,7 +97,7 @@ sp tab close <tab-uuid>
 
 ## Navigate
 
-Use these commands to move between tabs in a space. The optional target is a space selector or UUID.
+Use these commands to move between tabs in a space, inside the window the command runs in. The optional target is a space selector or UUID.
 
 ```bash
 sp tab next

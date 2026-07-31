@@ -9,10 +9,13 @@ Use `sp` to control Supaterm from a terminal already running inside Supaterm. Ru
 
 ## Terminology
 
-- Space: the top-level container that contains multiple tabs, users might use this to separate work / life profile.
+- Space: the top-level container, users might use this to separate work / life profile. Spaces are shared across windows: a space has one name, color, and position in the list, and every window can display it.
 - Group: an ordered collection of tabs inside a space
-- Tab: a terminal tab inside a space
+- Tab: a terminal tab inside a space. Tabs belong to one window and one space, so the same space holds different tabs in each window.
 - Pane: a split terminal region inside a tab
+
+A window displays one space at a time and switches in place. Space commands switch the window they
+run in and never open, close, or touch another window.
 
 ## Fast Start
 
@@ -40,11 +43,11 @@ sp pane split --json right
 # => { "spaceID": "...", "tabID": "...", "paneID": "...", ... }
 ```
 
-Create and focus spaces:
+List, create, and display spaces:
 
 ```bash
+sp space ls
 sp space new Work
-sp space new --focus Build
 sp space focus 1
 ```
 

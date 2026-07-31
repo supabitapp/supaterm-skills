@@ -13,7 +13,7 @@ sp ls --instance work-mac
 
 When a command runs inside Supaterm, many commands can omit their target:
 
-- `sp space focus` uses the current space
+- `sp space focus` uses the space this window displays
 - `sp tab focus` uses the current tab
 - `sp group collapse` uses the group containing the current tab
 - `sp pane focus` uses the current pane
@@ -28,6 +28,8 @@ That ambient context comes from:
 
 `SUPATERM_SOCKET_PATH` chooses the app socket. `SUPATERM_SURFACE_ID` and `SUPATERM_TAB_ID` choose the pane or tab target after the socket is connected.
 
+They also choose the window. Space commands, and `sp tab new --in <space>`, act on the window that owns that pane or tab, switching it in place and leaving every other window alone. Outside Supaterm the key window is used instead.
+
 ## Selector Forms
 
 - Space selector: `1`
@@ -36,13 +38,17 @@ That ambient context comes from:
 
 You can also pass UUIDs anywhere the CLI accepts a space, tab, or pane target.
 
+Space indexes follow the shared space order, the same order as `sp space ls` and the switcher dots, so `1` means the same space in every window. Tab and pane selectors are read inside the window the command acts on, because tabs belong to one window.
+
 Numeric tab selectors remain flat across the displayed root order. Group membership does not add another numeric selector component.
 
 Group targets use either a UUID or an exact title. UUIDs resolve globally. Titles resolve only within the ambient or targeted space and fail when duplicated there.
 
 ## Creation JSON
 
-`sp ls --json` returns the full tree with generic object `id` fields. Each space contains ordered `rootItems`: root tabs have `kind: "tab"`, while groups have `kind: "group"` and contain their ordered `tabs`.
+`sp ls --json` returns the full tree with generic object `id` fields. Each window carries `displayedSpaceID` and lists every space in shared order. Each space carries `isWarm` and ordered `rootItems`: root tabs have `kind: "tab"`, while groups have `kind: "group"` and contain their ordered `tabs`.
+
+A space with `isWarm: false` has not been opened in that window yet in this run. Its tabs and panes come from the saved layout, so its pane IDs are real but have no live terminal. `sp space focus` or `sp tab new --in <space>` opens it first.
 
 The CLI resolves selectors from a fresh tree and sends stable IDs. Reordering a space, tab, or pane cannot make the app act on a different item.
 
@@ -69,7 +75,7 @@ Use `tabID` or `paneID` from creation output when chaining follow-up commands li
 
 Targeted creation commands use `--in`:
 
-- `sp tab new --in <space>`
+- `sp tab new --in <space>` resolves the space inside the window the command runs in and opens its saved tabs first when needed. Add `--focus` to switch that window to the space as well.
 - `sp group new <title> --in <space>`
 - `sp pane split --in <tab>`
 - `sp pane split --in <pane>`
@@ -92,7 +98,7 @@ sp pane split --in <pane-uuid> up
 
 ## Target Rules By Family
 
-- `space` commands accept a space selector or UUID
+- `space` commands accept a space selector or UUID, and act on the window they run in
 - `group` commands accept a group UUID or an exact title in the relevant space
 - `tab focus`, `tab close`, and `tab rename` accept a tab selector or UUID
 - `tab move` accepts a tab selector or UUID, then requires a group or root destination
