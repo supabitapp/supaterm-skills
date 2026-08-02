@@ -56,9 +56,9 @@ sp diagnostic --json
 sp diagnostic --instance work-mac
 ```
 
-The Current Pane section shows the live foreground process ID and tty. JSON output exposes the same
-values as `foregroundProcessID` and `ttyName` on each live pane under `app.windows`; unavailable
-values are omitted.
+The Current Pane section shows the live foreground process-group ID and tty. JSON output exposes
+the same values as `foregroundProcessGroupID` and `ttyName` on each live pane under `app.windows`;
+unavailable values are omitted.
 
 Use onboarding to print shortcuts and integration setup commands:
 
