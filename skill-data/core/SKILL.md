@@ -111,5 +111,4 @@ sp skills path core
 - [Group commands](references/group.md)
 - [Tab commands](references/tab.md)
 - [Pane commands](references/pane.md)
-- [SSH](references/ssh.md)
 - [Agent commands](references/agent.md)
