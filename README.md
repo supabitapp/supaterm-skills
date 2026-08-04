@@ -12,7 +12,7 @@ sp skills path core
 sp skills get coding-agents
 ```
 
-`sp skills install` copies a stable discovery skill to `~/.agents/skills/supaterm`. The detailed guides stay bundled with the installed CLI so their commands always match that version.
+`sp skills install` asks the running Supaterm app to copy a stable discovery skill to `~/.agents/skills/supaterm`. The detailed guides stay in the app bundle so their commands always match the running version. Every `sp skills` command needs a reachable app.
 
 ## Pi
 

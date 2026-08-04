@@ -86,6 +86,8 @@ Validate another settings file:
 sp config validate --path ./settings.toml --json
 ```
 
+The app owns the settings file. `list`, `get`, `set`, `reset`, and `validate` run in the app, so they need a reachable instance and exit 64 without one. A `set` or `reset` takes effect at once. Only `sp config path` works with no app running.
+
 ## Compatibility
 
 Run a child process with Supaterm's tmux compatibility layer enabled:
