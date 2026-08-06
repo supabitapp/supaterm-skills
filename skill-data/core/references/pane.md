@@ -26,6 +26,8 @@ Flags:
 - `--script <script>` runs shell script text as the terminal startup command
 - `--in <tab-or-pane>` targets a tab selector, pane selector, or UUID
 
+A split with no command or explicit working directory inherits the anchor pane's plain interactive SSH login and opens the same remote host. Pass `--cwd`, a command after `--`, or `--script` to open a local shell instead.
+
 ## Focus And Close
 
 `sp pane focus` switches the window to the pane's space when the pane sits in another one.
