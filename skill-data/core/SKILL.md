@@ -81,6 +81,8 @@ Read JSON creation output for `tabID` and `paneID`. Capture the pane later with 
 
 Split panes and send commands:
 
+Splits leave focus unchanged by default. Add `--focus` when the new pane should become active.
+
 ```bash
 sp pane split down -- htop
 sp pane split --layout keep right
