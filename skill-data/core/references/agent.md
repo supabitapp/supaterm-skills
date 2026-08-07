@@ -10,7 +10,7 @@ Install Supaterm's bundled agent skill:
 sp skills install
 ```
 
-The command copies the stable discovery skill bundled with the running Supaterm version to `~/.agents/skills/supaterm`. Existing Supaterm skill directories or symlinks are replaced. Detailed instructions remain bundled with `sp` and are loaded through `sp skills get`.
+The running Supaterm app copies its bundled discovery skill to `~/.agents/skills/supaterm`. Existing Supaterm skill directories or symlinks are replaced. Detailed instructions stay in the app bundle and are loaded through `sp skills get`.
 
 ## Install Hooks
 
@@ -24,9 +24,11 @@ sp agent install-hook codex
 
 Effects:
 
-- `install-hooks` installs every supported Supaterm hook bridge
+- `install-hooks` installs Claude and then Codex, and stops at the first failure
 - `claude` installs Supaterm hooks into `~/.claude/settings.json`
 - `codex` requires Codex 0.144.1 or newer, enables hooks, installs Supaterm hooks into `~/.codex/hooks.json`, and registers native trust through Codex app-server
+
+The running app does the writing. These commands need a reachable Supaterm instance and change nothing without one.
 
 ## Remove Hooks
 
@@ -68,4 +70,12 @@ printf '{"hook_event_name":"session_start","session_id":"session-1","source":"pi
 
 ## Output
 
-`receive-agent-hook` is a forwarding command. `skills install`, `install-hook`, and `remove-hook` report failures through stderr and exit status.
+`receive-agent-hook` forwards a payload and prints nothing.
+
+`install-hook`, `remove-hook`, and `install-hooks` print nothing on success. `skills install` prints the installed path.
+
+Failures go to stderr with a non-zero exit status. With no reachable Supaterm instance:
+
+- every one of them prints `Error: No reachable Supaterm instance was found.`
+- `sp agent` commands exit 64
+- `sp skills` commands exit 1, and `--json` prints `{"success":false,"error":"..."}` on stdout instead

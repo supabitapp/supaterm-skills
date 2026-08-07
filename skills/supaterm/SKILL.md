@@ -5,7 +5,7 @@ description: Control Supaterm spaces, tab groups, tabs, panes, coding-agent inte
 
 # Supaterm
 
-This file is a stable discovery stub. Load the guide bundled with the installed `sp` version before running Supaterm commands:
+This file is a stable discovery stub. `sp skills` commands are served by the running Supaterm app, so the guide always matches the version you are driving. Load it before running Supaterm commands:
 
 ```bash
 sp skills get core
@@ -29,7 +29,7 @@ Load the coding-agent workflow before launching or prompting a coding agent:
 sp skills get coding-agents
 ```
 
-List every guide available in the installed version:
+List every guide the running app offers:
 
 ```bash
 sp skills list

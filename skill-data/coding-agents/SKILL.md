@@ -18,12 +18,11 @@ prompt="$(cat "$prompt_file")"
 
 sp tab new \
   --json \
-  --no-focus \
   --cwd "$workspace" \
   -- codex -- "$prompt"
 ```
 
-The first `--` ends `sp` options. The second ends Codex options so prompt text such as `resume`, `review`, or a leading dash remains a prompt. Use the equivalent end-of-options form with another supported `<agent>` executable. Use `--focus` when the new terminal should become active.
+The first `--` ends `sp` options. The second ends Codex options so prompt text such as `resume`, `review`, or a leading dash remains a prompt. Use the equivalent end-of-options form with another supported `<agent>` executable. New tabs and panes leave focus unchanged by default. Use `--focus` when the new terminal should become active.
 
 ## Split pane
 
@@ -35,7 +34,6 @@ agent_executable="<agent>"
 
 sp pane split right \
   --json \
-  --no-focus \
   --in "$target" \
   --cwd "$workspace" \
   -- "$agent_executable" -- "$prompt"

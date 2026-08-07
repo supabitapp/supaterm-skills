@@ -30,6 +30,8 @@ Flags:
 
 Do not combine `--group` and `--root`. When both are omitted, a new tab inherits the current tab's group when possible and otherwise appears at the space root.
 
+A tab with no command or explicit working directory inherits the anchor pane's plain interactive SSH login and opens the same remote host. Pass `--cwd`, a command after `--`, or `--script` to open a local shell instead.
+
 Pass commands as trailing arguments after `--` so `sp` preserves each argument. Use `sp skills get coding-agents` for multiline coding-agent prompts.
 
 ## Move
