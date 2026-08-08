@@ -55,6 +55,7 @@ Create, focus, and pin tabs:
 
 ```bash
 sp tab new --focus -- git status
+sp ssh --name Production user@example.com
 sp tab focus 1/2
 sp tab pin 1/2
 sp tab unpin 1/2
@@ -113,4 +114,5 @@ sp skills path core
 - [Group commands](references/group.md)
 - [Tab commands](references/tab.md)
 - [Pane commands](references/pane.md)
+- [SSH](references/ssh.md)
 - [Agent commands](references/agent.md)
