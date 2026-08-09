@@ -2,8 +2,10 @@
 
 `sp space` lists, creates, displays, renames, recolors, destroys, and navigates spaces.
 
-A space is shared: one name, one color, one position in the list, visible to every window. Tabs are
-not shared: each window keeps its own tabs inside each space. A window displays one space at a time.
+A Space is shared: one name, one color, one position, and one Project catalog are visible to every
+window. Project identity, canonical path, pin state, and order are shared. Tabs and Project collapse
+state are not shared: each window keeps its own inside each Space. A window displays one Space at a
+time.
 
 Every `sp space` command acts on one window, the one the command runs in. Outside Supaterm that is
 the key window. A space command switches that window in place and never opens, closes, or changes
@@ -24,10 +26,10 @@ sp space ls --plain
 
 ## Create
 
-`sp space new <name>` adds a space to the shared list, gives it a first tab, and displays it in this
-window. It never opens a window. `--color` sets the space color; a random color is used when the
-flag is omitted. Creation fails without leaving an empty space when the name is invalid or already
-used.
+`sp space new <name>` adds a Space with a Home Project to the shared list, gives it a first Tab, and
+displays it in this window. It never opens a window. `--color` sets the Space color; a random color
+is used when the flag is omitted. Creation fails without leaving an empty space when the name is
+invalid or already used.
 
 ```bash
 sp space new Work

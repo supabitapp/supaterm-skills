@@ -15,9 +15,9 @@ When a command runs inside Supaterm, many commands can omit their target:
 
 - `sp space focus` uses the space this window displays
 - `sp tab focus` uses the current tab
-- `sp group collapse` uses the group containing the current tab
+- `sp project collapse` uses the selected Tab's Project, then Home
 - `sp pane focus` uses the current pane
-- `sp tab new` creates a tab beside the current tab and inherits its group when possible
+- `sp tab new` creates a Tab in the selected Tab's Project, then Home
 - `sp pane split` splits the current pane
 
 That ambient context comes from:
@@ -40,13 +40,13 @@ You can also pass UUIDs anywhere the CLI accepts a space, tab, or pane target.
 
 Space indexes follow the shared space order, the same order as `sp space ls` and the switcher dots, so `1` means the same space in every window. Tab and pane selectors are read inside the window the command acts on, because tabs belong to one window.
 
-Numeric tab selectors remain flat across the displayed root order. Group membership does not add another numeric selector component.
+Numeric Tab selectors remain flat across pinned Projects first, then regular Projects, preserving the Tab order inside each Project. Project membership does not add another numeric selector component.
 
-Group targets use either a UUID or an exact title. UUIDs resolve globally. Titles resolve only within the ambient or targeted space and fail when duplicated there.
+Project targets use a UUID, canonical absolute path, or exact rendered label. They resolve only within the ambient or targeted Space. Use a Project UUID for durable automation.
 
 ## Creation JSON
 
-`sp ls --json` returns the full tree with generic object `id` fields. Each window carries `displayedSpaceID` and lists every space in shared order. Each space carries `isWarm` and ordered `rootItems`: root tabs have `kind: "tab"`, while groups have `kind: "group"` and contain their ordered `tabs`.
+`sp ls --json` returns the full tree with generic object `id` fields. Each window carries `displayedSpaceID` and lists every Space in shared order. Each Space carries `isWarm` and ordered `projects`. Every Project includes `id`, `path`, `isHome`, `isPinned`, `isCollapsed`, `availability`, and ordered `tabs`. Availability is `available`, `missing`, or `inaccessible`. Tabs do not repeat their Project ID.
 
 A space with `isWarm: false` has not been opened in that window yet in this run. Its tabs and panes come from the saved layout, so its pane IDs are real but have no live terminal. `sp space focus` or `sp tab new --in <space>` opens it first.
 
@@ -76,7 +76,7 @@ Use `tabID` or `paneID` from creation output when chaining follow-up commands li
 Targeted creation commands use `--in`:
 
 - `sp tab new --in <space>` resolves the space inside the window the command runs in and opens its saved tabs first when needed. Add `--focus` to switch that window to the space as well.
-- `sp group new <title> --in <space>`
+- every `sp project` command accepts `--in <space>`
 - `sp pane split --in <tab>`
 - `sp pane split --in <pane>`
 
@@ -89,7 +89,8 @@ Examples:
 ```bash
 sp tab new --in 1 --cwd ~/tmp -- git status
 sp tab new --in <space-uuid> --focus -- ping 1.1.1.1
-sp group new Build --in <space-uuid>
+sp project add ~/Code/supaterm --in <space-uuid>
+sp project collapse supaterm --in <space-uuid>
 sp pane split --in 1/2 left
 sp pane split --in 1/2/3 down -- tail -f /tmp/server.log
 sp pane split --in <tab-uuid> right
@@ -99,9 +100,10 @@ sp pane split --in <pane-uuid> up
 ## Target Rules By Family
 
 - `space` commands accept a space selector or UUID, and act on the window they run in
-- `group` commands accept a group UUID or an exact title in the relevant space
+- `project` commands accept a Project UUID, canonical path, or exact rendered label in the relevant Space
 - `tab focus`, `tab close`, and `tab rename` accept a tab selector or UUID
-- `tab move` accepts a tab selector or UUID, then requires a group or root destination
+- `tab new` accepts a Project through `--project`
+- `tab move` accepts a Tab selector or UUID and requires a Project through `--project`
 - `tab next`, `tab prev`, and `tab last` accept an optional space selector or UUID
 - `pane focus`, `pane close`, `pane capture`, `pane resize`, and `pane notify` accept a pane selector or UUID
 - `pane split` accepts a tab selector, pane selector, or UUID through `--in`

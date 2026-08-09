@@ -1,6 +1,6 @@
 # Connection and diagnostics
 
-`sp` targets a Supaterm app socket, then applies command-specific space, tab, or pane targeting.
+`sp` targets a Supaterm app socket, then applies command-specific Space, Project, Tab, or Pane targeting.
 
 ## Inside Supaterm
 

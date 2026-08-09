@@ -1,6 +1,6 @@
 ---
 name: core
-description: Core Supaterm CLI guide for controlling spaces, tab groups, tabs, panes, selectors, diagnostics, settings, and coding-agent integrations with `sp`. Read this before running Supaterm commands.
+description: Core Supaterm CLI guide for controlling spaces, projects, tabs, panes, selectors, diagnostics, settings, and coding-agent integrations with `sp`. Read this before running Supaterm commands.
 ---
 
 # Supaterm core
@@ -9,9 +9,9 @@ Use `sp` to control Supaterm from a terminal already running inside Supaterm. Ru
 
 ## Terminology
 
-- Space: the top-level container, users might use this to separate work / life profile. Spaces are shared across windows: a space has one name, color, and position in the list, and every window can display it.
-- Group: an ordered collection of tabs inside a space
-- Tab: a terminal tab inside a space. Tabs belong to one window and one space, so the same space holds different tabs in each window.
+- Space: the top-level container, used to separate areas such as work and personal use. Spaces are shared across windows: a space has one name, color, Project catalog, and position in the list, and every window can display it.
+- Project: a folder-backed collection of tabs inside a Space. Project identity, canonical path, pin state, and order are shared across windows. Every Space has a Home Project.
+- Tab: a terminal tab inside one Project. Tabs belong to one window, so the same Space and Project can hold different tabs in each window.
 - Pane: a split terminal region inside a tab
 
 A window displays one space at a time and switches in place. Space commands switch the window they
@@ -51,22 +51,20 @@ sp space new Work
 sp space focus 1
 ```
 
-Create, focus, and pin tabs:
+Add a Project and create a Tab in it:
 
 ```bash
-sp tab new --focus -- git status
+sp project add "$PWD"
+sp tab new --project "$PWD" --focus -- git status
 sp tab focus 1/2
-sp tab pin 1/2
-sp tab unpin 1/2
 ```
 
-Create a group and place tabs in it:
+Pin or collapse the Project, or move a Tab to another Project:
 
 ```bash
-sp group new Build --color blue
-sp tab new --group Build -- git status
-sp tab move 1/2 --group Build
-sp group collapse Build
+sp project pin "$PWD"
+sp project collapse "$PWD"
+sp tab move 1/2 --project Home
 ```
 
 Trailing arguments after `--` are treated as a terminal startup command.
@@ -110,7 +108,7 @@ sp skills path core
 - [Connection and diagnostics](references/connection-and-diagnostics.md)
 - [Targeting and selectors](references/targeting-and-selectors.md)
 - [Space commands](references/space.md)
-- [Group commands](references/group.md)
+- [Project commands](references/project.md)
 - [Tab commands](references/tab.md)
 - [Pane commands](references/pane.md)
 - [Agent commands](references/agent.md)

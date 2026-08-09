@@ -1,6 +1,6 @@
 # Tab commands
 
-`sp tab` creates, selects, moves, pins, unpins, renames, closes, and navigates tabs.
+`sp tab` creates, selects, moves, renames, closes, and navigates Tabs. Every Tab belongs to one Project.
 
 ## Create
 
@@ -11,9 +11,9 @@ sp tab new -- ping 1.1.1.1
 sp tab new --script 'echo hi; pwd'
 sp tab new --script 'printf "ready\n"; exec "${SHELL:-/bin/zsh}" -l'
 sp tab new --focus -- git status
-sp tab new --group Build -- git status
-sp tab new --group <group-uuid>
-sp tab new --root
+sp tab new --project Build -- git status
+sp tab new --project <project-uuid>
+sp tab new --project /Users/me/Code/supaterm
 sp tab new --in 1 --cwd ~/tmp -- ping 1.1.1.1
 sp tab new --in <space-uuid> --cwd ~/tmp -- ping 1.1.1.1
 ```
@@ -25,27 +25,25 @@ Flags:
 - `--cwd <path>` sets the starting working directory
 - `--script <script>` runs shell script text as the terminal startup command
 - `--in <space>` targets a space selector or UUID inside this window
-- `--group <group>` creates the tab in a group selected by exact title or UUID
-- `--root` creates the tab at the space root
+- `--project <project>` targets a Project UUID, canonical path, or exact rendered label
 
-Do not combine `--group` and `--root`. When both are omitted, a new tab inherits the current tab's group when possible and otherwise appears at the space root.
+When `--project` is omitted, the new Tab uses the selected Tab's Project when it belongs to the target Space, then Home.
 
-A tab with no command or explicit working directory inherits the anchor pane's plain interactive SSH login and opens the same remote host. Pass `--cwd`, a command after `--`, or `--script` to open a local shell instead.
+A Tab with no startup command opens a local shell at its Project root, even when the source Pane runs SSH. `--cwd` changes only the launch directory; it does not change Project membership.
 
 Pass commands as trailing arguments after `--` so `sp` preserves each argument. Use `sp skills get coding-agents` for multiline coding-agent prompts.
 
 ## Move
 
-`sp tab move [tab]` moves a tab into a group or to the space root. `--index` is a 1-based index within the destination.
+`sp tab move [tab] --project <project>` moves a Tab to another Project in the same window and Space. `--index` is a 1-based index within the destination Project.
 
 ```bash
-sp tab move --group Build
-sp tab move 1/2 --group <group-uuid> --index 1
-sp tab move --root
-sp tab move <tab-uuid> --root --pin --index 1
+sp tab move --project Build
+sp tab move 1/2 --project <project-uuid> --index 1
+sp tab move <tab-uuid> --project /Users/me/Code/supaterm
 ```
 
-Provide exactly one of `--group` or `--root`. `--pin` is valid only with `--root`.
+Moving preserves the Tab ID, processes, Panes, current working directories, and title.
 
 ## Focus
 
@@ -68,26 +66,6 @@ sp tab rename Logs 1/2
 sp tab rename Deploy <tab-uuid>
 ```
 
-## Pin
-
-`sp tab pin [tab]` pins a tab. Pinning a grouped tab extracts it to the pinned space root.
-
-```bash
-sp tab pin
-sp tab pin 1/2
-sp tab pin <tab-uuid>
-```
-
-## Unpin
-
-`sp tab unpin [tab]` unpins a tab.
-
-```bash
-sp tab unpin
-sp tab unpin 1/2
-sp tab unpin <tab-uuid>
-```
-
 ## Close
 
 `sp tab close [tab]` closes a tab.
@@ -100,7 +78,7 @@ sp tab close <tab-uuid>
 
 ## Navigate
 
-Use these commands to move between tabs in a space, inside the window the command runs in. The optional target is a space selector or UUID.
+Use these commands to move between Tabs in a Space, inside the window the command runs in. The optional target is a Space selector or UUID. Order is flattened across pinned Projects first, then regular Projects, preserving each Project's Tab order.
 
 ```bash
 sp tab next
