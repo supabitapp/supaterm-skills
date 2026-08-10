@@ -70,7 +70,7 @@ printf '{"hook_event_name":"session_start","session_id":"session-1","source":"pi
 
 ## Output
 
-`receive-agent-hook` forwards a payload and normally prints nothing. On the first root prompt in an unlocked tab with no prior agent activity, it prints hook context that asks the agent to lock a short task title before other work.
+`receive-agent-hook` forwards a payload and normally prints nothing. On a root prompt in an unlocked tab, it prints hook context that asks the agent to lock a short task title before other work. The locked title stops later prompts from printing that context.
 
 `install-hook`, `remove-hook`, and `install-hooks` print nothing on success. `skills install` prints the installed path.
 
