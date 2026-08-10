@@ -73,6 +73,8 @@ Arguments after `--` remain exact process arguments. When the command exits, the
 
 `--script` takes raw code for the login shell to parse. The shell remains open after the script ends.
 
+Shell startup files must not read from the terminal before the first prompt. Such a read takes the queued command.
+
 ```bash
 sp tab new --script 'printf "ready\n"; pwd'
 ```
