@@ -4,7 +4,7 @@
 
 ## Split
 
-`sp pane split <direction>` creates a new pane beside the current pane when run inside Supaterm. The new pane does not take focus by default; add `--focus` to make it active. Use `--in` to target a tab or pane explicitly. Trailing arguments after `--` are treated as a terminal startup command. `--script` runs shell script text as the terminal startup command.
+`sp pane split <direction>` creates a new pane beside the current pane when run inside Supaterm. The new pane does not take focus by default; add `--focus` to make it active. Use `--in` to target a tab or pane explicitly.
 
 ```bash
 sp pane split right
@@ -24,10 +24,12 @@ Flags:
 - `--focus` focuses the new pane instead of using the default background behavior
 - `--no-focus` explicitly leaves focus unchanged
 - `--cwd <path>` sets the starting working directory
-- `--script <script>` runs shell script text as the terminal startup command
+- `--script <script>` runs raw code in the login shell
 - `--in <tab-or-pane>` targets a tab selector, pane selector, or UUID
 
 A split with no command or explicit working directory inherits the anchor pane's plain interactive SSH login and opens the same remote host. Pass `--cwd`, a command after `--`, or `--script` to open a local shell instead.
+
+Arguments after `--` remain exact process arguments. When the command exits, the pane returns to its login shell. `--script` takes raw code for that shell to parse and also returns to the shell when the script ends.
 
 ## Focus And Close
 
