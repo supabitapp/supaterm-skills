@@ -80,9 +80,9 @@ Targeted creation commands use `--in`:
 - `sp pane split --in <tab>`
 - `sp pane split --in <pane>`
 
-Trailing arguments after `--` on `sp tab new` and `sp pane split` are treated as a terminal startup command.
+Arguments after `--` on `sp tab new` and `sp pane split` remain exact process arguments. When the command exits, the tab or pane returns to its login shell.
 
-`--script` runs shell script text as the terminal startup command.
+`--script` takes raw code for the login shell to parse. The shell remains open after the script ends.
 
 Examples:
 

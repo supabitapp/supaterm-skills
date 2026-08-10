@@ -69,12 +69,12 @@ sp tab move 1/2 --group Build
 sp group collapse Build
 ```
 
-Trailing arguments after `--` are treated as a terminal startup command.
+Arguments after `--` remain exact process arguments. When the command exits, the tab or pane returns to its login shell.
 
-`--script` runs shell script text as the terminal startup command. End scripts with `exec "${SHELL:-/bin/zsh}" -l` when the tab or pane should stay open.
+`--script` takes raw code for the login shell to parse. The shell remains open after the script ends.
 
 ```bash
-sp tab new --script 'printf "ready\n"; exec "${SHELL:-/bin/zsh}" -l'
+sp tab new --script 'printf "ready\n"; pwd'
 ```
 
 Read JSON creation output for `tabID` and `paneID`. Capture the pane later with `sp pane capture --scope scrollback --lines 160 <pane-uuid>`.
@@ -88,10 +88,6 @@ sp pane split down -- htop
 sp pane split --layout keep right
 sp pane send --newline 'echo hello'
 ```
-
-Trailing arguments after `--` are treated as a terminal startup command.
-
-`--script` runs shell script text as the terminal startup command. End setup scripts with `exec "${SHELL:-/bin/zsh}" -l` when the pane should stay open.
 
 ## Deep-Dive References
 

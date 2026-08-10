@@ -4,12 +4,11 @@
 
 ## Create
 
-`sp tab new` creates a tab in the space this window displays when run inside Supaterm. Use `--in` to target another space in the same window; the space opens its saved tabs first when this window has not displayed it yet, and `--focus` also switches the window to that space. Trailing arguments after `--` are treated as a terminal startup command. `--script` runs shell script text as the terminal startup command.
+`sp tab new` creates a tab in the space this window displays when run inside Supaterm. Use `--in` to target another space in the same window; the space opens its saved tabs first when this window has not displayed it yet, and `--focus` also switches the window to that space.
 
 ```bash
 sp tab new -- ping 1.1.1.1
 sp tab new --script 'echo hi; pwd'
-sp tab new --script 'printf "ready\n"; exec "${SHELL:-/bin/zsh}" -l'
 sp tab new --focus -- git status
 sp tab new --group Build -- git status
 sp tab new --group <group-uuid>
@@ -23,7 +22,7 @@ Flags:
 - `--focus` focuses the new tab
 - `--no-focus` leaves focus unchanged
 - `--cwd <path>` sets the starting working directory
-- `--script <script>` runs shell script text as the terminal startup command
+- `--script <script>` runs raw code in the login shell
 - `--in <space>` targets a space selector or UUID inside this window
 - `--group <group>` creates the tab in a group selected by exact title or UUID
 - `--root` creates the tab at the space root
@@ -32,7 +31,7 @@ Do not combine `--group` and `--root`. When both are omitted, a new tab inherits
 
 A tab with no command or explicit working directory inherits the anchor pane's plain interactive SSH login and opens the same remote host. Pass `--cwd`, a command after `--`, or `--script` to open a local shell instead.
 
-Pass commands as trailing arguments after `--` so `sp` preserves each argument. Use `sp skills get coding-agents` for multiline coding-agent prompts.
+Pass commands as trailing arguments after `--` so `sp` preserves each argument exactly. When the command exits, the tab returns to its login shell. `--script` takes raw code for that shell to parse and also returns to the shell when the script ends. Use `sp skills get coding-agents` for multiline coding-agent prompts.
 
 ## Move
 
