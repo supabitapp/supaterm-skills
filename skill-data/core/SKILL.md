@@ -33,6 +33,13 @@ Discover selectors and UUIDs:
 sp ls --json
 ```
 
+Resolve the first project icon:
+
+```bash
+sp project icon
+sp project icon ~/code/project --json
+```
+
 Creation commands use typed JSON keys instead of a generic `id`:
 
 ```bash
@@ -106,6 +113,7 @@ sp skills path core
 ```
 
 - [Connection and diagnostics](references/connection-and-diagnostics.md)
+- [Project commands](references/project.md)
 - [Targeting and selectors](references/targeting-and-selectors.md)
 - [Space commands](references/space.md)
 - [Group commands](references/group.md)
