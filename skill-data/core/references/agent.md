@@ -68,7 +68,7 @@ process start time in microseconds, rule source, rule generation, and rule ID. M
 
 Native hooks win when they identify the same process. Fallback detection first proves a declared
 agent process in the pane's foreground process group by process ID and start time. It then applies
-the bundled or signed cached rules to a bounded active-screen and raw-title capture.
+the bundled or cached rules to a bounded active-screen and raw-title capture.
 
 Fallback state is temporary and read-only. It does not create action sessions, notifications,
 transcript or child-agent state, or saved state. The command never returns terminal text, titles,
