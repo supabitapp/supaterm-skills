@@ -27,7 +27,7 @@ Flags:
 - `--script <script>` runs raw code in the login shell
 - `--in <tab-or-pane>` targets a tab selector, pane selector, or UUID
 
-A split with no command or explicit working directory inherits the anchor pane's plain interactive SSH login and opens the same remote host. Pass `--cwd`, a command after `--`, or `--script` to open a local shell instead.
+A split with no command starts a local login shell.
 
 Arguments after `--` remain exact process arguments. When the command exits, the pane returns to its login shell. `--script` takes raw code for that shell to parse and also returns to the shell when the script ends.
 
