@@ -29,7 +29,7 @@ Flags:
 
 A split with no command starts a local login shell.
 
-Arguments after `--` remain exact process arguments. When the command exits, the pane returns to its login shell. `--script` takes raw code for that shell to parse and also returns to the shell when the script ends.
+The first argument after `--` names an executable, and every argument remains exact. When the executable exits, the pane returns to its login shell. Use `--script` for builtins, aliases, or raw shell code; the pane also returns to the shell when the script ends.
 
 ## Focus And Close
 

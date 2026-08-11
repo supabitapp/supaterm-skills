@@ -76,9 +76,9 @@ sp tab move 1/2 --group Build
 sp group collapse Build
 ```
 
-Arguments after `--` remain exact process arguments. When the command exits, the tab or pane returns to its login shell.
+The first argument after `--` names an executable. All arguments remain exact. When the executable exits, the tab or pane returns to its login shell.
 
-`--script` takes raw code for the login shell to parse. The shell remains open after the script ends.
+Use `--script` for builtins, aliases, or raw code for the login shell to parse. The shell remains open after the script ends.
 
 Shell startup files must not read from the terminal before the first prompt. Such a read takes the queued command.
 

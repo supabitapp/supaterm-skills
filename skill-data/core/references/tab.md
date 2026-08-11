@@ -31,7 +31,7 @@ Do not combine `--group` and `--root`. When both are omitted, a new tab inherits
 
 A tab with no command starts a local login shell.
 
-Pass commands as trailing arguments after `--` so `sp` preserves each argument exactly. When the command exits, the tab returns to its login shell. `--script` takes raw code for that shell to parse and also returns to the shell when the script ends. Use `sp skills get coding-agents` for multiline coding-agent prompts.
+Pass an executable and its arguments after `--` so `sp` preserves each argument exactly. When the executable exits, the tab returns to its login shell. Use `--script` for builtins, aliases, or raw shell code; the tab also returns to the shell when the script ends. Use `sp skills get coding-agents` for multiline coding-agent prompts.
 
 ## Move
 

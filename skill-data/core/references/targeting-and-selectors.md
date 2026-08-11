@@ -80,9 +80,9 @@ Targeted creation commands use `--in`:
 - `sp pane split --in <tab>`
 - `sp pane split --in <pane>`
 
-Arguments after `--` on `sp tab new` and `sp pane split` remain exact process arguments. When the command exits, the tab or pane returns to its login shell.
+The first argument after `--` on `sp tab new` and `sp pane split` names an executable. All arguments remain exact. When the executable exits, the tab or pane returns to its login shell.
 
-`--script` takes raw code for the login shell to parse. The shell remains open after the script ends.
+Use `--script` for builtins, aliases, or raw code for the login shell to parse. The shell remains open after the script ends.
 
 Examples:
 
