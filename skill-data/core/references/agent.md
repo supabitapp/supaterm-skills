@@ -30,6 +30,50 @@ Effects:
 
 The running app does the writing. These commands need a reachable Supaterm instance and change nothing without one.
 
+## Explain Agent Detection
+
+Inspect the agent state for the ambient pane or an explicit pane:
+
+```bash
+sp agent explain
+sp agent explain 1/2/3
+sp agent explain 1/2/3 --json
+sp agent explain --plain
+sp agent explain --quiet
+```
+
+Use `--json` when another command will read the result. The result always has `target`, `mode`, and
+`status`. It adds these fields when known:
+
+- `rules`: `source` (`bundle` or `cache`) and `generation`
+- `agent`: `id`, `displayName`, and `phase` (`idle`, `running`, or `needs_input`)
+- `process`: `processID` and `startTimeMicroseconds`
+- `ruleID`: the fallback rule that matched
+
+Plain output is one tab-separated row: `space/tab/pane`, mode, status, agent ID, phase, process ID,
+process start time in microseconds, rule source, rule generation, and rule ID. Missing values are `-`.
+`--quiet` still runs the check but hides a successful result. The command also accepts `--socket`,
+`--instance`, and `--no-color`.
+
+`mode` is `native`, `fallback`, or `none`. `status` is one of:
+
+- `resolved`
+- `native_authority`
+- `detection_disabled`
+- `waiting`
+- `no_foreground_process`
+- `unrecognized_process`
+- `screen_unavailable`
+- `no_rule_match_or_settling`
+
+Native hooks win when they identify the same process. Fallback detection first proves a declared
+agent process in the pane's foreground process group by process ID and start time. It then applies
+the bundled or signed cached rules to a bounded active-screen and raw-title capture.
+
+Fallback state is temporary and read-only. It does not create action sessions, notifications,
+transcript or child-agent state, or saved state. The command never returns terminal text, titles,
+executable paths, or rule patterns.
+
 ## Remove Hooks
 
 Remove Supaterm-managed hooks from an agent configuration:
