@@ -1,6 +1,7 @@
 # Pane commands
 
-`sp pane` splits, focuses, closes, resizes, captures, checks readiness, notifies, and sends text to panes.
+`sp pane` splits, focuses, closes, resizes, captures text, takes screenshots, checks readiness,
+notifies, and sends text to panes.
 
 ## Split
 
@@ -75,6 +76,18 @@ Use `--newline` only to append a literal newline. Do not use it to submit multil
 sp pane capture
 sp pane capture --scope scrollback --lines 200
 sp pane capture --json <pane-uuid>
+```
+
+## Screenshot
+
+`sp pane screenshot` saves the visible pane as a PNG. The pane must be on screen in a
+non-minimized Supaterm window. The command does not change the selected space, tab, pane, or
+application focus.
+
+```bash
+sp pane screenshot --output pane.png
+sp pane screenshot 1/2/3 --output pane.png
+sp pane screenshot <pane-uuid> -o pane.png --json
 ```
 
 ## Health And Readiness
