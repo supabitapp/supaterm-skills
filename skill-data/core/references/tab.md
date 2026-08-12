@@ -9,8 +9,8 @@
 ```bash
 sp tab new -- ping 1.1.1.1
 sp tab new --script 'echo hi; pwd'
-sp tab new --focus -- git status
-sp tab new --group Build -- git status
+sp tab new --focus
+sp tab new --group Build
 sp tab new --group <group-uuid>
 sp tab new --root
 sp tab new --in 1 --cwd ~/tmp -- ping 1.1.1.1
@@ -29,9 +29,9 @@ Flags:
 
 Do not combine `--group` and `--root`. When both are omitted, a new tab inherits the current tab's group when possible and otherwise appears at the space root.
 
-A tab with no command starts a local login shell.
+A tab with no command starts the account login shell.
 
-Pass an executable and its arguments after `--` so `sp` preserves each argument exactly. When the executable exits, the tab returns to its login shell. Use `--script` for builtins, aliases, or raw shell code; the tab also returns to the shell when the script ends. Use `sp skills get coding-agents` for multiline coding-agent prompts.
+Pass an executable and its arguments after `--` to launch it directly. Supaterm resolves the executable with the caller's `PATH`, preserves each argument exactly, skips shell startup files, and closes the tab when the executable exits. Use `--script` for builtins, aliases, or raw shell code. Supaterm enters the text visibly in the account login shell and returns to that same shell when the script ends. Use `sp skills get coding-agents` for multiline coding-agent prompts.
 
 ## Move
 
@@ -112,7 +112,7 @@ sp tab last <space-uuid>
 Mutating `tab` commands support the standard output flags:
 
 ```bash
-sp tab new --json --focus -- git status
+sp tab new --json --focus
 sp tab focus --plain 1/2
 sp tab close --quiet 1/2
 ```

@@ -9,7 +9,7 @@ Use a new tab for an independent task and a split pane for work beside an existi
 
 ## Initial prompt
 
-Read a multiline prompt from a file into one argument, then pass that argument to the agent executable. Supaterm preserves every argument exactly. The initial prompt travels through process arguments instead of terminal input.
+Read a multiline prompt from a file into one argument, then pass that argument to the agent executable. Supaterm launches the agent directly, resolves it with the caller's `PATH`, preserves every argument exactly, and skips shell startup files. The initial prompt travels through process arguments instead of terminal input.
 
 ```bash
 prompt_file=/tmp/task-prompt.md
@@ -24,7 +24,7 @@ sp tab new \
 
 The first `--` ends `sp` options. The second ends Codex options so prompt text such as `resume`, `review`, or a leading dash remains a prompt. Use the equivalent end-of-options form with another supported `<agent>` executable. New tabs and panes leave focus unchanged by default. Use `--focus` when the new terminal should become active.
 
-When the agent exits, the tab or pane returns to its login shell.
+When the agent exits, the tab or pane closes.
 
 ## Split pane
 
@@ -40,6 +40,8 @@ sp pane split right \
   --cwd "$workspace" \
   -- "$agent_executable" -- "$prompt"
 ```
+
+Agent-panel forks use a different launch mode. Supaterm starts the account login shell and enters the agent's native fork command visibly. The pane returns to that same shell when the forked agent exits.
 
 ## Follow-up prompt
 

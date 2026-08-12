@@ -15,7 +15,7 @@ Most commands can omit explicit targets inside Supaterm:
 
 ```bash
 sp ls
-sp tab new -- git status
+sp tab new
 sp pane split right
 sp pane capture
 ```
@@ -41,7 +41,7 @@ Examples:
 ```bash
 sp ls --socket /tmp/supaterm-501/instance-default-pid-1234
 sp pane capture --instance work-mac 1/2/3
-sp tab new --instance work-mac --in 1 -- git status
+sp tab new --instance work-mac --in 1
 ```
 
 If multiple reachable app instances exist, `sp` requires `--instance` or `--socket`.

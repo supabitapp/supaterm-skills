@@ -28,9 +28,9 @@ Flags:
 - `--script <script>` runs raw code in the login shell
 - `--in <tab-or-pane>` targets a tab selector, pane selector, or UUID
 
-A split with no command starts a local login shell.
+A split with no command starts the account login shell.
 
-The first argument after `--` names an executable, and every argument remains exact. When the executable exits, the pane returns to its login shell. Use `--script` for builtins, aliases, or raw shell code; the pane also returns to the shell when the script ends.
+The first argument after `--` names an executable to launch directly. Supaterm resolves it with the caller's `PATH`, preserves every argument exactly, skips shell startup files, and closes the pane when the executable exits. Use `--script` for builtins, aliases, or raw shell code. Supaterm enters the text visibly in the account login shell and returns to that same shell when the script ends.
 
 ## Focus And Close
 

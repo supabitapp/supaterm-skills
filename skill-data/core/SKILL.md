@@ -43,7 +43,7 @@ sp project icon ~/code/project --json
 Creation commands use typed JSON keys instead of a generic `id`:
 
 ```bash
-sp tab new --json -- git status
+sp tab new --json
 # => { "spaceID": "...", "tabID": "...", "paneID": "...", ... }
 
 sp pane split --json right
@@ -61,7 +61,7 @@ sp space focus 1
 Create, focus, and pin tabs:
 
 ```bash
-sp tab new --focus -- git status
+sp tab new --focus
 sp tab focus 1/2
 sp tab pin 1/2
 sp tab unpin 1/2
@@ -71,16 +71,16 @@ Create a group and place tabs in it:
 
 ```bash
 sp group new Build --color blue
-sp tab new --group Build -- git status
+sp tab new --group Build
 sp tab move 1/2 --group Build
 sp group collapse Build
 ```
 
-The first argument after `--` names an executable. All arguments remain exact. When the executable exits, the tab or pane returns to its login shell.
+Omit both a trailing command and `--script` to start the account login shell.
 
-Use `--script` for builtins, aliases, or raw code for the login shell to parse. The shell remains open after the script ends.
+The first argument after `--` names an executable to launch directly. Supaterm resolves it with the caller's `PATH`, preserves all arguments exactly, skips shell startup files, and closes the tab or pane when the executable exits.
 
-Shell startup files must not read from the terminal before the first prompt. Such a read takes the queued command.
+Use `--script` for builtins, aliases, or raw code for the account login shell to parse. Supaterm enters the text visibly and returns to the same shell after the script ends.
 
 ```bash
 sp tab new --script 'printf "ready\n"; pwd'

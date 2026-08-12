@@ -55,7 +55,7 @@ The CLI resolves selectors from a fresh tree and sends stable IDs. Reordering a 
 Creation commands return typed IDs instead:
 
 ```bash
-sp tab new --json -- git status
+sp tab new --json
 ```
 
 ```json
@@ -80,14 +80,16 @@ Targeted creation commands use `--in`:
 - `sp pane split --in <tab>`
 - `sp pane split --in <pane>`
 
-The first argument after `--` on `sp tab new` and `sp pane split` names an executable. All arguments remain exact. When the executable exits, the tab or pane returns to its login shell.
+With no trailing command or `--script`, the new tab or pane starts the account login shell.
 
-Use `--script` for builtins, aliases, or raw code for the login shell to parse. The shell remains open after the script ends.
+The first argument after `--` on `sp tab new` and `sp pane split` names an executable to launch directly. Supaterm resolves it with the caller's `PATH`, preserves all arguments exactly, skips shell startup files, and closes the tab or pane when the executable exits.
+
+Use `--script` for builtins, aliases, or raw code for the account login shell to parse. Supaterm enters the text visibly and returns to that same shell after the script ends.
 
 Examples:
 
 ```bash
-sp tab new --in 1 --cwd ~/tmp -- git status
+sp tab new --in 1 --cwd ~/tmp --script 'git status'
 sp tab new --in <space-uuid> --focus -- ping 1.1.1.1
 sp group new Build --in <space-uuid>
 sp pane split --in 1/2 left
@@ -114,7 +116,7 @@ sp pane split --in <pane-uuid> up
 Outside Supaterm, omit ambient assumptions and pass an explicit target. If more than one app instance is reachable, also pass `--instance` or `--socket`.
 
 ```bash
-sp tab new --in 1 -- git status
+sp tab new --in 1
 sp pane split --in 1/2 right
 sp tab focus 1/2
 sp pane focus 1/2/3

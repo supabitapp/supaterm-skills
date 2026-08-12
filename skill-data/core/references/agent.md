@@ -59,6 +59,8 @@ printf '{"hook_event_name":"PreToolUse","session_id":"session-1","cwd":"/tmp/pro
 
 Root hook payloads should include the agent's absolute `cwd`. Supaterm uses it for the agent panel Workspace row, Git status, and forked session working directory. Child-agent directories do not replace the root workspace.
 
+An agent-panel fork starts the account login shell in a new pane and enters the agent's native fork command visibly. The pane returns to that same shell when the forked agent exits.
+
 Use this when wiring an external agent hook system into Supaterm. This is lower-level than `install-hook` and `remove-hook`.
 
 Pi integrations use this lower-level forwarding command from the Pi extension:
