@@ -98,6 +98,7 @@ Splits leave focus unchanged by default. Add `--focus` when the new pane should 
 sp pane split down -- htop
 sp pane split --layout keep right
 sp pane send --newline 'echo hello'
+sp pane key ctrl-c
 ```
 
 ## Deep-Dive References

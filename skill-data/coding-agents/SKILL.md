@@ -53,6 +53,14 @@ sp pane send --submit "$pane_id" - < "$prompt_file"
 
 Do not use `--newline`, typed bracketed-paste escape sequences, or timing sleeps to submit a prompt.
 
+## Interrupt
+
+Send Ctrl-C to a coding agent through the native key route:
+
+```bash
+sp pane key ctrl-c "$pane_id"
+```
+
 ## Verify
 
 Capture the agent pane after launch or submission:

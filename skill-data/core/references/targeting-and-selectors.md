@@ -107,6 +107,7 @@ sp pane split --in <pane-uuid> up
 - `pane split` accepts a tab selector, pane selector, or UUID through `--in`
 - `pane layout` accepts an optional tab selector or UUID
 - `pane send` accepts an optional pane selector or UUID as its first argument
+- `pane key` accepts an optional pane selector or UUID after the key
 
 ## Outside Supaterm
 

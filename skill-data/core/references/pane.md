@@ -1,7 +1,7 @@
 # Pane commands
 
 `sp pane` splits, focuses, closes, resizes, captures text, takes screenshots, checks readiness,
-notifies, and sends text to panes.
+notifies, and sends text or keys to panes.
 
 ## Split
 
@@ -67,6 +67,19 @@ sp pane send --submit <pane-uuid> - < prompt.txt
 ```
 
 Use `--newline` only to append a literal newline. Do not use it to submit multiline prompts to an interactive coding agent.
+
+## Send Key
+
+`sp pane key <key> [pane]` sends one key event. It targets the current pane when run inside
+Supaterm unless you pass a pane selector or UUID.
+
+```bash
+sp pane key ctrl-c
+sp pane key enter 1/2/3
+sp pane key escape <pane-uuid>
+```
+
+Supported keys: `backspace`, `ctrl-c`, `ctrl-d`, `ctrl-l`, `ctrl-z`, `enter`, `escape`, and `tab`.
 
 ## Capture
 
@@ -146,5 +159,6 @@ Mutating `pane` commands support the standard output flags:
 ```bash
 sp pane split --json right
 sp pane focus --plain 1/2/3
+sp pane key ctrl-c <pane-uuid>
 sp pane close --quiet 1/2/3
 ```
