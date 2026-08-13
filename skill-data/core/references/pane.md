@@ -93,9 +93,8 @@ sp pane capture --json <pane-uuid>
 
 ## Screenshot
 
-`sp pane screenshot` saves the visible pane as a PNG. The pane must be on screen in a
-non-minimized Supaterm window. The command does not change the selected space, tab, pane, or
-application focus.
+`sp pane screenshot` saves a pane as a PNG, including one hidden in another space or tab. The
+command does not change the selected space, tab, pane, or application focus.
 
 ```bash
 sp pane screenshot --output pane.png

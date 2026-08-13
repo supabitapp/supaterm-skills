@@ -92,7 +92,7 @@ sp tab new --script 'printf "ready\n"; pwd'
 
 Read JSON creation output for `tabID` and `paneID`. Capture the pane later with its UUID or a live `p:` ref: `sp pane capture --scope scrollback --lines 160 <pane-target>`.
 
-Save the rendered pane as a PNG while it is visible with `sp pane screenshot <pane-uuid> --output pane.png`.
+Save any rendered pane as a PNG with `sp pane screenshot <pane-uuid> --output pane.png`.
 
 Split panes and send commands:
 
