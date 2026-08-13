@@ -26,7 +26,7 @@ Flags:
 - `--no-focus` explicitly leaves focus unchanged
 - `--cwd <path>` sets the starting working directory
 - `--script <script>` runs raw code in the login shell
-- `--in <tab-or-pane>` targets a tab selector, pane selector, or UUID
+- `--in <tab-or-pane>` targets a tab or pane
 
 A split with no command starts the account login shell.
 
@@ -71,7 +71,7 @@ Use `--newline` only to append a literal newline. Do not use it to submit multil
 ## Send Key
 
 `sp pane key <key> [pane]` sends one key event. It targets the current pane when run inside
-Supaterm unless you pass a pane selector or UUID.
+Supaterm unless you pass a pane target.
 
 ```bash
 sp pane key ctrl-c

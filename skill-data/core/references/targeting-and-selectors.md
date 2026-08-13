@@ -1,6 +1,6 @@
 # Targeting and selectors
 
-Use `sp ls --json` to discover the current Supaterm tree, including selectors and UUIDs. `sp ls` and `sp ls --plain` include pane display titles.
+Use `sp ls` as the compact live snapshot. Human and plain output show typed short refs. JSON returns canonical UUIDs for durable automation.
 
 ```bash
 sp ls
@@ -35,22 +35,66 @@ They also choose the window. Space commands, and `sp tab new --in <space>`, act 
 - Space selector: `1`
 - Tab selector: `1/2`
 - Pane selector: `1/2/3`
+- Space ref: `s:a6e57b1b`
+- Group ref: `g:5a52445e`
+- Tab ref: `t:6bfc889d`
+- Pane ref: `p:2b8b3a57`
 
-You can also pass UUIDs anywhere the CLI accepts a space, tab, or pane target.
+Typed refs contain 8 to 32 case-insensitive UUID hex characters. Supaterm prints lowercase refs with the shortest unique prefix for that kind, never fewer than eight characters. Repeated rows with the same UUID share one ref and do not count as collisions. Prefixes can grow when another live item collides. Longer valid refs work.
+
+The CLI resolves each typed ref from a fresh live snapshot and sends the canonical UUID. Missing, malformed, wrong-kind, and ambiguous refs fail. Ambiguity errors list the full matching typed refs. Typed tokens never fall back to titles.
+
+Short refs and numeric selectors reflect live topology. Use canonical UUIDs from JSON or creation output when identity must survive later calls. Full UUIDs work anywhere the matching typed ref works.
+
+`sp tmux` keeps tmux's `session:window` grammar. It treats a typed-looking token as a short ref only when that ref resolves to a live matching object.
 
 Space indexes follow the shared space order, the same order as `sp space ls` and the switcher dots, so `1` means the same space in every window. Tab and pane selectors are read inside the window the command acts on, because tabs belong to one window.
 
-Numeric tab selectors remain flat across the displayed root order. Group membership does not add another numeric selector component.
+Groups have no numeric selector. Tab selectors remain flat across the displayed root order, so group membership does not add another component.
 
-Group targets use either a UUID or an exact title. UUIDs resolve globally. Titles resolve only within the ambient or targeted space and fail when duplicated there.
+An untyped group target can be an exact title. Titles resolve only within the ambient or targeted space and fail when duplicated there.
+
+## Listing JSON
+
+`sp ls --json` returns one flat snapshot:
+
+```json
+{
+  "revision": "a6cd3174dc5d64f2",
+  "current": {
+    "windowIndex": 1,
+    "spaceID": "A6E57B1B-0A61-4F72-BD52-B26DC5D3C497",
+    "tabID": "6BFC889D-2D0F-4675-924E-B15A6A4E372B",
+    "paneID": "2B8B3A57-D7F8-4EF7-930F-46B1F7281B2A"
+  },
+  "items": [
+    {
+      "kind": "pane",
+      "id": "2B8B3A57-D7F8-4EF7-930F-46B1F7281B2A",
+      "parentID": "6BFC889D-2D0F-4675-924E-B15A6A4E372B",
+      "windowIndex": 1,
+      "title": "build",
+      "cwd": "/code/project",
+      "selected": true,
+      "agent": {
+        "kind": "codex",
+        "sessionID": "019ffa6a-8555-74d0-876d-c153c46353bb",
+        "phase": "running"
+      }
+    }
+  ]
+}
+```
+
+Items appear in window, space, root, and child order. Each item has `kind`, canonical `id`, `windowIndex`, `title`, and `selected`. Children add `parentID`. Panes can add `cwd` and `agent`. Spaces add `isWarm`.
+
+When present, `current` has `windowIndex`, `spaceID`, `tabID`, and optional `paneID`. `revision` is an opaque live snapshot token. Compare it for equality; it is not a counter or schema version.
+
+JSON contains no derived short-ref or numeric-selector fields. The same space UUID may appear once per window because each window owns different tabs in that space. Use `(windowIndex, kind, id)` for a space occurrence and join parent rows within the same window.
+
+A space with `isWarm: false` has not been opened in that window yet in this run. Its tabs, panes, IDs, and saved pane cwd come from the saved layout. It has no live terminal or agent state. `sp space focus` or `sp tab new --in <space>` opens it first.
 
 ## Creation JSON
-
-`sp ls --json` returns the full tree with generic object `id` fields. Each window carries `displayedSpaceID` and lists every space in shared order. Each space carries `isWarm` and ordered `rootItems`: root tabs have `kind: "tab"`, while groups have `kind: "group"` and contain their ordered `tabs`.
-
-A space with `isWarm: false` has not been opened in that window yet in this run. Its tabs and panes come from the saved layout, so its pane IDs are real but have no live terminal. `sp space focus` or `sp tab new --in <space>` opens it first.
-
-The CLI resolves selectors from a fresh tree and sends stable IDs. Reordering a space, tab, or pane cannot make the app act on a different item.
 
 Creation commands return typed IDs instead:
 
@@ -70,6 +114,13 @@ sp tab new --json
 ```
 
 Use `tabID` or `paneID` from creation output when chaining follow-up commands like `sp pane split --in <tabID>` or `sp pane send <paneID> ...`.
+
+Use `--plain` instead of `--json` when only the new pane UUID is needed:
+
+```bash
+sp tab new --plain
+sp pane split --plain right
+```
 
 ## `--in`
 
@@ -100,16 +151,16 @@ sp pane split --in <pane-uuid> up
 
 ## Target Rules By Family
 
-- `space` commands accept a space selector or UUID, and act on the window they run in
-- `group` commands accept a group UUID or an exact title in the relevant space
-- `tab focus`, `tab close`, and `tab rename` accept a tab selector or UUID
-- `tab move` accepts a tab selector or UUID, then requires a group or root destination
-- `tab next`, `tab prev`, and `tab last` accept an optional space selector or UUID
-- `pane focus`, `pane close`, `pane capture`, `pane resize`, and `pane notify` accept a pane selector or UUID
-- `pane split` accepts a tab selector, pane selector, or UUID through `--in`
-- `pane layout` accepts an optional tab selector or UUID
-- `pane send` accepts an optional pane selector or UUID as its first argument
-- `pane key` accepts an optional pane selector or UUID after the key
+- `space` commands accept a space target and act on the window they run in
+- `group` commands accept a group target in the relevant space
+- `tab focus`, `tab close`, and `tab rename` accept a tab target
+- `tab move` accepts a tab target, then requires a group or root destination
+- `tab next`, `tab prev`, and `tab last` accept an optional space target
+- `pane focus`, `pane close`, `pane capture`, `pane resize`, and `pane notify` accept a pane target
+- `pane split` accepts a tab or pane target through `--in`
+- `pane layout` accepts an optional tab target
+- `pane send` accepts an optional pane target as its first argument
+- `pane key` accepts an optional pane target after the key
 
 ## Outside Supaterm
 

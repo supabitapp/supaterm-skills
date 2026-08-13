@@ -27,11 +27,13 @@ sp diagnostic
 sp instance ls
 ```
 
-Discover selectors and UUIDs:
+Inspect the live topology and copy a typed short ref:
 
 ```bash
-sp ls --json
+sp ls
 ```
+
+Use `sp ls --json` when durable automation needs canonical UUIDs.
 
 Resolve the first project icon:
 
@@ -49,6 +51,8 @@ sp tab new --json
 sp pane split --json right
 # => { "spaceID": "...", "tabID": "...", "paneID": "...", ... }
 ```
+
+`sp tab new --plain` and `sp pane split --plain right` print the new pane UUID for direct chaining.
 
 List, create, and display spaces:
 
@@ -86,7 +90,7 @@ Use `--script` for builtins, aliases, or raw code for the account login shell to
 sp tab new --script 'printf "ready\n"; pwd'
 ```
 
-Read JSON creation output for `tabID` and `paneID`. Capture the pane later with `sp pane capture --scope scrollback --lines 160 <pane-uuid>`.
+Read JSON creation output for `tabID` and `paneID`. Capture the pane later with its UUID or a live `p:` ref: `sp pane capture --scope scrollback --lines 160 <pane-target>`.
 
 Save the rendered pane as a PNG while it is visible with `sp pane screenshot <pane-uuid> --output pane.png`.
 

@@ -1,6 +1,6 @@
 # Group commands
 
-`sp group` creates and manages ordered tab groups inside spaces. A group target is either its UUID or its exact title within the relevant space.
+`sp group` creates and manages ordered tab groups inside spaces. A group target is a `g:` ref, full UUID, or exact untyped title within the relevant space.
 
 ## Create
 
@@ -18,7 +18,7 @@ Colors are `neutral`, `red`, `orange`, `yellow`, `green`, `blue`, `pink`, and `p
 
 ## Target groups
 
-Group commands accept an exact title or UUID. UUIDs are global. Titles are resolved only inside the ambient or explicitly targeted space and must be unique there.
+Group refs and UUIDs resolve globally. Untyped titles resolve only inside the ambient or explicitly targeted space and must be unique there. A typed token never falls back to a title.
 
 When a target is omitted inside Supaterm, the group containing the current tab is used. An ungrouped current tab has no ambient group.
 
@@ -85,7 +85,25 @@ Closing an empty group only removes the group. Closing the final tabs in a windo
 Group mutations support the standard output flags:
 
 ```bash
-sp group new Build --json
+sp group new Build --color blue --json
 sp group color blue Build --plain
 sp group collapse Build --quiet
+```
+
+Group creation JSON nests its canonical ID under `group.id`:
+
+```json
+{
+  "group": {
+    "color": "blue",
+    "id": "5A52445E-E42A-48B7-A5DD-C6C7C978B139",
+    "isCollapsed": false,
+    "isPinned": false,
+    "tabs": [],
+    "title": "Build"
+  },
+  "spaceID": "A6E57B1B-0A61-4F72-BD52-B26DC5D3C497",
+  "spaceIndex": 1,
+  "windowIndex": 1
+}
 ```

@@ -23,8 +23,8 @@ Flags:
 - `--no-focus` leaves focus unchanged
 - `--cwd <path>` sets the starting working directory
 - `--script <script>` runs raw code in the login shell
-- `--in <space>` targets a space selector or UUID inside this window
-- `--group <group>` creates the tab in a group selected by exact title or UUID
+- `--in <space>` targets a space inside this window
+- `--group <group>` creates the tab in a targeted group
 - `--root` creates the tab at the space root
 
 Do not combine `--group` and `--root`. When both are omitted, a new tab inherits the current tab's group when possible and otherwise appears at the space root.
@@ -99,7 +99,7 @@ sp tab close <tab-uuid>
 
 ## Navigate
 
-Use these commands to move between tabs in a space, inside the window the command runs in. The optional target is a space selector or UUID.
+Use these commands to move between tabs in a space, inside the window the command runs in. The optional value is a space target.
 
 ```bash
 sp tab next
