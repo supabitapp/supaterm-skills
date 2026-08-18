@@ -46,18 +46,18 @@ Removing Codex hooks also removes Supaterm hook trust through Codex app-server.
 `sp agent receive-agent-hook --agent <agent>` reads one hook payload from stdin and forwards it to Supaterm.
 
 ```bash
-printf '{"hook_event_name":"Notification","message":"Claude needs your attention"}' \
+printf '{"hook_event_name":"SessionStart","session_id":"session-1","cwd":"/tmp/project"}' \
   | sp agent receive-agent-hook --agent claude
 ```
 
 Installed hooks pass the parent process ID:
 
 ```bash
-printf '{"hook_event_name":"PreToolUse","session_id":"session-1","cwd":"/tmp/project"}' \
+printf '{"hook_event_name":"SessionStart","session_id":"session-1","cwd":"/tmp/project"}' \
   | sp agent receive-agent-hook --agent codex --pid 123
 ```
 
-Root hook payloads should include the agent's absolute `cwd`. Supaterm uses it for the agent panel Workspace row, Git status, and forked session working directory. Child-agent directories do not replace the root workspace.
+For Claude and Codex, Supaterm uses only root `SessionStart` events. It ignores every other hook event. Session-start payloads should include the agent's absolute `cwd`. Supaterm uses it for the agent panel Workspace row, Git status, and forked session working directory.
 
 An agent-panel fork starts the account login shell in a new pane and enters the agent's native fork command visibly. The pane returns to that same shell when the forked agent exits.
 
