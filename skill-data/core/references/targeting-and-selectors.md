@@ -78,15 +78,19 @@ An untyped group target can be an exact title. Titles resolve only within the am
       "selected": true,
       "agent": {
         "kind": "codex",
-        "sessionID": "019ffa6a-8555-74d0-876d-c153c46353bb",
-        "phase": "running"
-      }
+        "phase": "running",
+        "phaseSource": "native",
+        "sessionID": "019ffa6a-8555-74d0-876d-c153c46353bb"
+      },
+      "agentStatus": "resolved"
     }
   ]
 }
 ```
 
-Items appear in window, space, root, and child order. Each item has `kind`, canonical `id`, `windowIndex`, `title`, and `selected`. Children add `parentID`. Panes can add `cwd` and `agent`. Spaces add `isWarm`.
+Items appear in window, space, root, and child order. Each item has `kind`, canonical `id`, `windowIndex`, `title`, and `selected`. Children add `parentID`. Panes can add `cwd`, `agent`, and `agentStatus`. Spaces add `isWarm`.
+
+`agentStatus` says how coding-agent detection stands for the pane: `resolved` or `native_authority` when an agent is identified, otherwise why not (`waiting`, `unrecognized_process`, `no_foreground_process`, `no_rule_match_or_settling`, `screen_unavailable`, `detection_disabled`). `agent` carries `kind`, `phase` (`idle`, `running`, `needs_input`), and `phaseSource` (`native` when a hook or integration owns the phase, `screen` when terminal rules do), plus `sessionID`, `ruleID`, and `process` when known. Read `agentStatus` first when a pane that should run an agent shows none.
 
 When present, `current` has `windowIndex`, `spaceID`, `tabID`, and optional `paneID`. `revision` is an opaque live snapshot token. Compare it for equality; it is not a counter or schema version.
 
