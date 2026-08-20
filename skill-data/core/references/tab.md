@@ -59,12 +59,20 @@ sp tab focus <tab-uuid>
 
 ## Rename
 
-`sp tab rename <title> [tab]` locks a tab title.
+`sp tab rename <title> [tab]` locks a tab title. Pass an empty title to clear the lock and restore
+the live terminal title.
 
 ```bash
 sp tab rename Build
+sp tab rename ''
 sp tab rename Logs 1/2
 sp tab rename Deploy <tab-uuid>
+```
+
+Read the current tab title:
+
+```bash
+sp tmux display-message -p '#{window_name}'
 ```
 
 ## Pin
