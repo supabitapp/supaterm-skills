@@ -87,20 +87,3 @@ sp config validate --path ./settings.toml --json
 ```
 
 The app owns the settings file. `list`, `get`, `set`, `reset`, and `validate` run in the app, so they need a reachable instance and exit 64 without one. A `set` or `reset` takes effect at once. Only `sp config path` works with no app running.
-
-## Compatibility
-
-Run a child process with Supaterm's tmux compatibility layer enabled:
-
-```bash
-sp run -- zsh -lc 'echo hi'
-sp run --instance work-mac -- zsh -lc 'echo hi'
-```
-
-Run tmux-compatible commands against Supaterm:
-
-```bash
-sp tmux list-panes
-sp tmux split-window -h -P
-sp tmux --instance work-mac display-message -p '#{session_name}:#{window_index}.#{pane_index}'
-```

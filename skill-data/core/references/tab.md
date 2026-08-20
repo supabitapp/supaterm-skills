@@ -57,6 +57,17 @@ sp tab focus 1/2
 sp tab focus <tab-uuid>
 ```
 
+## Title
+
+`sp tab title [tab]` prints a tab title. It uses the current tab when the target is omitted inside
+Supaterm.
+
+```bash
+sp tab title
+sp tab title 1/2
+sp tab title <tab-uuid> --json
+```
+
 ## Rename
 
 `sp tab rename <title> [tab]` locks a tab title. Pass an empty title to clear the lock and restore
@@ -67,12 +78,6 @@ sp tab rename Build
 sp tab rename ''
 sp tab rename Logs 1/2
 sp tab rename Deploy <tab-uuid>
-```
-
-Read the current tab title:
-
-```bash
-sp tmux display-message -p '#{window_name}'
 ```
 
 ## Pin

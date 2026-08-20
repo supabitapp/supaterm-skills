@@ -46,8 +46,6 @@ The CLI resolves each typed ref from a fresh live snapshot and sends the canonic
 
 Short refs and numeric selectors reflect live topology. Use canonical UUIDs from JSON or creation output when identity must survive later calls. Full UUIDs work anywhere the matching typed ref works.
 
-`sp tmux` keeps tmux's `session:window` grammar. It treats a typed-looking token as a short ref only when that ref resolves to a live matching object.
-
 Space indexes follow the shared space order, the same order as `sp space ls` and the switcher dots, so `1` means the same space in every window. Tab and pane selectors are read inside the window the command acts on, because tabs belong to one window.
 
 Groups have no numeric selector. Tab selectors remain flat across the displayed root order, so group membership does not add another component.
