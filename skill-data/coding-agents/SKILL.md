@@ -54,7 +54,7 @@ printf 'paneID=%s\n' "$pane_id"
 
 Run each block in one shell invocation. Shell variables do not survive separate agent tool calls. For a later call, paste the printed pane UUID as a literal target. If you use `--instance` or `--socket`, repeat it on every `sp` call; the CLI retains no connection state.
 
-Agent-panel forks use a different launch mode. Supaterm starts the account login shell and enters the agent's native fork command visibly. The pane returns to that same shell when the forked agent exits.
+Agent-panel forks use a different launch mode. Supaterm starts the account login shell and enters the agent's native fork command visibly. Codex forks keep supported launch options from the source process, such as `--profile`. The pane returns to that same shell when the forked agent exits.
 
 ## Follow-up prompt
 
