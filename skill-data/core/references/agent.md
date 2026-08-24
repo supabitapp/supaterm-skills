@@ -1,6 +1,27 @@
 # Agent Commands
 
-`sp agent` manages Supaterm's coding-agent hook bridge.
+`sp agent` manages and inspects Supaterm's coding-agent integration.
+
+## Inspect Detection
+
+Explain the active manifest, process proof, matched rule, published rule, and every evaluated rule
+condition for the current or selected pane:
+
+```bash
+sp agent explain
+sp agent explain 1/2/1
+sp agent explain <pane-uuid> --json
+```
+
+Local manifests live in `$SUPATERM_STATE_HOME/agent-detection/<agent>.toml`, or
+`~/.config/supaterm/agent-detection/<agent>.toml` without an explicit state root. Reload all local
+overrides atomically after an edit:
+
+```bash
+sp agent reload-rules
+```
+
+An invalid reload fails and keeps the prior rule generation active.
 
 ## Install Skill
 
@@ -74,7 +95,8 @@ printf '{"hook_event_name":"session_start","session_id":"session-1","source":"pi
 
 `receive-agent-hook` forwards a payload and prints nothing.
 
-`install-hook`, `remove-hook`, and `install-hooks` print nothing on success. `skills install` prints the installed path.
+`install-hook`, `remove-hook`, and `install-hooks` print nothing on success. `explain` and
+`reload-rules` print detection details. `skills install` prints the installed path.
 
 Failures go to stderr with a non-zero exit status. With no reachable Supaterm instance:
 
