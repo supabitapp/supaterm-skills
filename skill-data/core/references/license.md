@@ -17,6 +17,8 @@ sp license buy
 
 Supaterm opens the page in the user's default browser and prints the URL. The user completes payment there. The license key appears on the thank-you page and arrives by email.
 
+If buy or renew returns `license_sales_unavailable`, sales are closed. Tell the user and stop. Do not open a purchase or renewal URL directly.
+
 Activate through the hidden prompt:
 
 ```bash
