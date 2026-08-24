@@ -1,6 +1,6 @@
 ---
 name: supaterm
-description: Control Supaterm spaces, tab groups, tabs, panes, coding-agent integrations, and task launches with `sp`. Use when an agent needs to inspect or operate Supaterm, organize tabs, open commands in tabs or panes, or launch and prompt coding agents.
+description: Control Supaterm spaces, tab groups, tabs, panes, licensing, coding-agent integrations, and task launches with `sp`. Use when an agent needs to inspect or operate Supaterm, organize tabs, handle a tab-limit refusal, guide a Supaterm purchase or activation, open commands in tabs or panes, or launch and prompt coding agents.
 ---
 
 # Supaterm
@@ -22,6 +22,14 @@ Resolve the bundled directory when reading one reference directly:
 ```bash
 sp skills path core
 ```
+
+Load the license reference before guiding a purchase, activation, renewal, deactivation, or `license_required` tab refusal:
+
+```bash
+sp skills path core
+```
+
+Read `references/license.md` from the printed directory.
 
 Load the coding-agent workflow before launching or prompting a coding agent:
 

@@ -1,6 +1,6 @@
 ---
 name: core
-description: Core Supaterm CLI guide for controlling spaces, tab groups, tabs, panes, selectors, diagnostics, settings, and coding-agent integrations with `sp`. Read this before running Supaterm commands.
+description: Core Supaterm CLI guide for controlling spaces, tab groups, tabs, panes, selectors, diagnostics, settings, licensing, and coding-agent integrations with `sp`. Read this before running Supaterm commands.
 ---
 
 # Supaterm core
@@ -40,6 +40,12 @@ Resolve the first project icon:
 ```bash
 sp project icon
 sp project icon ~/code/project --json
+```
+
+Inspect the license without exposing its key:
+
+```bash
+sp license
 ```
 
 Creation commands use typed JSON keys instead of a generic `id`:
@@ -126,4 +132,5 @@ sp skills path core
 - [Group commands](references/group.md)
 - [Tab commands](references/tab.md)
 - [Pane commands](references/pane.md)
+- [License commands](references/license.md)
 - [Agent commands](references/agent.md)
