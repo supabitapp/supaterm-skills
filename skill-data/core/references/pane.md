@@ -10,6 +10,7 @@ notifies, and sends text or keys to panes.
 ```bash
 sp pane split right
 sp pane split --focus right
+sp pane split --host build --cwd /srv/project right
 sp pane split down -- htop
 sp pane split down --script 'echo hi; pwd'
 sp pane split --layout keep right
@@ -25,10 +26,11 @@ Flags:
 - `--focus` focuses the new pane instead of using the default background behavior
 - `--no-focus` explicitly leaves focus unchanged
 - `--cwd <path>` sets the starting working directory
+- `--host <id>` runs the pane on a host configured in Supaterm settings
 - `--script <script>` runs raw code in the login shell
 - `--in <tab-or-pane>` targets a tab or pane
 
-A split with no command starts the account login shell.
+A local split with no command starts the Mac account login shell. A hosted split starts the remote account shell. Remote paths and commands resolve on that host.
 
 The first argument after `--` names an executable to launch directly. Supaterm resolves it with the caller's `PATH`, preserves every argument exactly, skips shell startup files, and closes the pane when the executable exits. Use `--script` for builtins, aliases, or raw shell code. Supaterm enters the text visibly in the account login shell and returns to that same shell when the script ends.
 

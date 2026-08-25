@@ -77,6 +77,15 @@ sp tab pin 1/2
 sp tab unpin 1/2
 ```
 
+Create a persistent tab or pane on a host configured in **Settings > Hosts**:
+
+```bash
+sp tab new --host build --cwd /srv/project --focus
+sp pane split --host build --cwd /srv/project right -- make test
+```
+
+Remote paths and commands belong to the configured host. Supaterm installs its bundled session host on the first connection.
+
 Create a group and place tabs in it:
 
 ```bash

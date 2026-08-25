@@ -10,6 +10,7 @@
 sp tab new -- ping 1.1.1.1
 sp tab new --script 'echo hi; pwd'
 sp tab new --focus
+sp tab new --host build --cwd /srv/project
 sp tab new --group Build
 sp tab new --group <group-uuid>
 sp tab new --root
@@ -22,6 +23,7 @@ Flags:
 - `--focus` focuses the new tab
 - `--no-focus` leaves focus unchanged
 - `--cwd <path>` sets the starting working directory
+- `--host <id>` runs the tab on a host configured in Supaterm settings
 - `--script <script>` runs raw code in the login shell
 - `--in <space>` targets a space inside this window
 - `--group <group>` creates the tab in a targeted group
@@ -29,7 +31,7 @@ Flags:
 
 Do not combine `--group` and `--root`. When both are omitted, a new tab inherits the current tab's group when possible and otherwise appears at the space root.
 
-A tab with no command starts the account login shell.
+A local tab with no command starts the Mac account login shell. A hosted tab starts the remote account shell. Remote paths and commands resolve on that host.
 
 Free mode allows five open tabs across every window and space. At the limit, `sp tab new` exits nonzero with the `license_required` error. Do not retry it. Close a tab or follow the [license playbook](license.md). The user must handle payment and paste the key into the hidden `sp license activate` prompt.
 
