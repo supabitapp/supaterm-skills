@@ -1,6 +1,6 @@
 ---
 name: core
-description: Core Supaterm CLI guide for controlling spaces, tab groups, tabs, panes, selectors, diagnostics, settings, licensing, and coding-agent integrations with `sp`. Read this before running Supaterm commands.
+description: Core Supaterm CLI guide for controlling Projects, Spaces, Tabs, panes, selectors, diagnostics, settings, licensing, and coding-agent integrations with `sp`. Read this before running Supaterm commands.
 ---
 
 # Supaterm core
@@ -9,9 +9,9 @@ Use `sp` to control Supaterm from a terminal already running inside Supaterm. Ru
 
 ## Terminology
 
-- Space: the top-level container, users might use this to separate work / life profile. Spaces are shared across windows: a space has one name, color, and position in the list, and every window can display it.
-- Group: an ordered collection of tabs inside a space
-- Tab: a terminal tab inside a space. Tabs belong to one window and one space, so the same space holds different tabs in each window.
+- Project: an app-wide catalog item with a name, optional root, color, pin state, and optional Tab membership
+- Space: the top-level window-local navigation boundary. Spaces are shared across windows: a Space has one name, color, and position in the list, and every window can display it.
+- Tab: a terminal Tab inside a Space. A Tab belongs to one window and one Space and may belong to one Project.
 - Pane: a split terminal region inside a tab
 
 A window displays one space at a time and switches in place. Space commands switch the window they
@@ -77,13 +77,13 @@ sp tab pin 1/2
 sp tab unpin 1/2
 ```
 
-Create a group and place tabs in it:
+Create a Project and assign Tabs to it:
 
 ```bash
-sp group new Build --color blue
-sp tab new --group Build
-sp tab move 1/2 --group Build
-sp group collapse Build
+sp project add Build --root "$PWD" --color blue
+sp tab new --project Build
+sp tab move 1/2 --project Build
+sp tab move 1/2 --unassigned
 ```
 
 Omit both a trailing command and `--script` to start the account login shell.
@@ -129,7 +129,6 @@ sp skills path core
 - [Project commands](references/project.md)
 - [Targeting and selectors](references/targeting-and-selectors.md)
 - [Space commands](references/space.md)
-- [Group commands](references/group.md)
 - [Tab commands](references/tab.md)
 - [Pane commands](references/pane.md)
 - [License commands](references/license.md)

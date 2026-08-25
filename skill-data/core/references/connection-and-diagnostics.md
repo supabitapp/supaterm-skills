@@ -1,6 +1,6 @@
 # Connection and diagnostics
 
-`sp` targets a Supaterm app socket, then applies command-specific space, tab, or pane targeting.
+`sp` targets a Supaterm app socket, then applies command-specific Project, Space, Tab, or pane targeting.
 
 ## Inside Supaterm
 
@@ -45,6 +45,8 @@ sp tab new --instance work-mac --in 1
 ```
 
 If multiple reachable app instances exist, `sp` requires `--instance` or `--socket`.
+
+`sp project icon [directory]` is the exception: it reads the local filesystem and never connects to an app.
 
 ## Diagnostics
 

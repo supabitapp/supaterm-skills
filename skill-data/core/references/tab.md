@@ -10,9 +10,8 @@
 sp tab new -- ping 1.1.1.1
 sp tab new --script 'echo hi; pwd'
 sp tab new --focus
-sp tab new --group Build
-sp tab new --group <group-uuid>
-sp tab new --root
+sp tab new --project Build
+sp tab new --project <project-uuid>
 sp tab new --in 1 --cwd ~/tmp -- ping 1.1.1.1
 sp tab new --in <space-uuid> --cwd ~/tmp -- ping 1.1.1.1
 ```
@@ -24,10 +23,9 @@ Flags:
 - `--cwd <path>` sets the starting working directory
 - `--script <script>` runs raw code in the login shell
 - `--in <space>` targets a space inside this window
-- `--group <group>` creates the tab in a targeted group
-- `--root` creates the tab at the space root
+- `--project <project>` assigns the new Tab to a targeted Project
 
-Do not combine `--group` and `--root`. When both are omitted, a new tab inherits the current tab's group when possible and otherwise appears at the space root.
+When `--project` is omitted, a new Tab is Unassigned. Explicit `--cwd` wins. Otherwise a Project Tab uses its stored root when it exists, then the normal cwd fallback.
 
 A tab with no command starts the account login shell.
 
@@ -37,16 +35,16 @@ Pass an executable and its arguments after `--` to launch it directly. Supaterm 
 
 ## Move
 
-`sp tab move [tab]` moves a tab into a group or to the space root. `--index` is a 1-based index within the destination.
+`sp tab move [tab]` assigns a Tab to a Project or clears its membership. `--index` is one-based within the destination's pinned or regular lane.
 
 ```bash
-sp tab move --group Build
-sp tab move 1/2 --group <group-uuid> --index 1
-sp tab move --root
-sp tab move <tab-uuid> --root --pin --index 1
+sp tab move --project Build
+sp tab move 1/2 --project <project-uuid> --pin --index 1
+sp tab move --unassigned
+sp tab move <tab-uuid> --unassigned --unpin --index 1
 ```
 
-Provide exactly one of `--group` or `--root`. `--pin` is valid only with `--root`.
+Provide exactly one of `--project` or `--unassigned`. Add `--pin` or `--unpin` to change the Tab lane; omit both to retain it.
 
 ## Focus
 
@@ -84,7 +82,7 @@ sp tab rename Deploy <tab-uuid>
 
 ## Pin
 
-`sp tab pin [tab]` pins a tab. Pinning a grouped tab extracts it to the pinned space root.
+`sp tab pin [tab]` pins a Tab within its Project or Unassigned section. It does not change membership.
 
 ```bash
 sp tab pin

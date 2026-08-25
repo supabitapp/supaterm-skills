@@ -1,6 +1,6 @@
 ---
 name: supaterm
-description: Control Supaterm spaces, tab groups, tabs, panes, licensing, coding-agent integrations, and task launches with `sp`. Use when an agent needs to inspect or operate Supaterm, organize tabs, handle a tab-limit refusal, guide a Supaterm purchase or activation, open commands in tabs or panes, or launch and prompt coding agents.
+description: Control Supaterm Projects, Spaces, Tabs, panes, licensing, coding-agent integrations, and task launches with `sp`. Use when an agent needs to inspect or operate Supaterm, organize Tabs, handle a Tab-limit refusal, guide a Supaterm purchase or activation, open commands in Tabs or panes, or launch and prompt coding agents.
 ---
 
 # Supaterm

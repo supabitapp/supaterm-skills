@@ -15,9 +15,8 @@ When a command runs inside Supaterm, many commands can omit their target:
 
 - `sp space focus` uses the space this window displays
 - `sp tab focus` uses the current tab
-- `sp group collapse` uses the group containing the current tab
 - `sp pane focus` uses the current pane
-- `sp tab new` creates a tab beside the current tab and inherits its group when possible
+- `sp tab new` creates an Unassigned Tab beside the current Tab
 - `sp pane split` splits the current pane
 
 That ambient context comes from:
@@ -36,7 +35,7 @@ They also choose the window. Space commands, and `sp tab new --in <space>`, act 
 - Tab selector: `1/2`
 - Pane selector: `1/2/3`
 - Space ref: `s:a6e57b1b`
-- Group ref: `g:5a52445e`
+- Project ref: `j:5a52445e`
 - Tab ref: `t:6bfc889d`
 - Pane ref: `p:2b8b3a57`
 
@@ -48,9 +47,9 @@ Short refs and numeric selectors reflect live topology. Use canonical UUIDs from
 
 Space indexes follow the shared space order, the same order as `sp space ls` and the switcher dots, so `1` means the same space in every window. Tab and pane selectors are read inside the window the command acts on, because tabs belong to one window.
 
-Groups have no numeric selector. Tab selectors remain flat across the displayed root order, so group membership does not add another component.
+Projects have no numeric selector. Tab selectors remain flat across derived Project sections followed by Unassigned, so Project membership does not add another component.
 
-An untyped group target can be an exact title. Titles resolve only within the ambient or targeted space and fail when duplicated there.
+An untyped Project target can be an exact case-insensitive name. Names are unique app-wide.
 
 ## Listing JSON
 
@@ -65,6 +64,15 @@ An untyped group target can be an exact title. Titles resolve only within the am
     "tabID": "6BFC889D-2D0F-4675-924E-B15A6A4E372B",
     "paneID": "2B8B3A57-D7F8-4EF7-930F-46B1F7281B2A"
   },
+  "projects": [
+    {
+      "id": "5A52445E-E42A-48B7-A5DD-C6C7C978B139",
+      "name": "Build",
+      "rootPath": "/code/project",
+      "color": "blue",
+      "isPinned": false
+    }
+  ],
   "items": [
     {
       "kind": "pane",
@@ -86,7 +94,7 @@ An untyped group target can be an exact title. Titles resolve only within the am
 }
 ```
 
-Items appear in window, space, root, and child order. Each item has `kind`, canonical `id`, `windowIndex`, `title`, and `selected`. Children add `parentID`. Panes can add `cwd`, `agent`, and `agentStatus`. Spaces add `isWarm`.
+`projects` is the pinned-first app-wide catalog. Items appear in window, Space, derived Project-section, Unassigned, Tab, and pane order. Projects do not repeat as item nodes. Each item has `kind`, canonical `id`, `windowIndex`, `title`, and `selected`. Tabs can add `projectID` and `isPinned`; children add `parentID`. Panes can add `cwd`, `agent`, and `agentStatus`. Spaces add `isWarm`.
 
 `agentStatus` says how coding-agent detection stands for the pane: `resolved` or `native_authority` when an agent is identified, otherwise why not (`waiting`, `unrecognized_process`, `no_foreground_process`, `no_rule_match_or_settling`, `screen_unavailable`, `detection_disabled`). `agent` carries `kind`, `phase` (`unknown`, `idle`, `running`, `needs_input`), and `phaseSource` (`native` when a hook or integration owns the phase, `screen` when terminal rules do), plus `sessionID` and `ruleID` when known. `sp diagnostic` adds the agent's process id. Use `sp agent explain [pane]` for the manifest source and rule evidence. Read `agentStatus` first when a pane that should run an agent shows none.
 
@@ -129,7 +137,6 @@ sp pane split --plain right
 Targeted creation commands use `--in`:
 
 - `sp tab new --in <space>` resolves the space inside the window the command runs in and opens its saved tabs first when needed. Add `--focus` to switch that window to the space as well.
-- `sp group new <title> --in <space>`
 - `sp pane split --in <tab>`
 - `sp pane split --in <pane>`
 
@@ -143,8 +150,7 @@ Examples:
 
 ```bash
 sp tab new --in 1 --cwd ~/tmp --script 'git status'
-sp tab new --in <space-uuid> --focus -- ping 1.1.1.1
-sp group new Build --in <space-uuid>
+sp tab new --in <space-uuid> --project Build --focus -- ping 1.1.1.1
 sp pane split --in 1/2 left
 sp pane split --in 1/2/3 down -- tail -f /tmp/server.log
 sp pane split --in <tab-uuid> right
@@ -154,9 +160,9 @@ sp pane split --in <pane-uuid> up
 ## Target Rules By Family
 
 - `space` commands accept a space target and act on the window they run in
-- `group` commands accept a group target in the relevant space
+- `project` commands accept a global Project target; only `project icon` is local and takes a directory
 - `tab focus`, `tab close`, and `tab rename` accept a tab target
-- `tab move` accepts a tab target, then requires a group or root destination
+- `tab move` accepts a Tab target, then requires a Project or Unassigned destination
 - `tab next`, `tab prev`, and `tab last` accept an optional space target
 - `pane focus`, `pane close`, `pane capture`, `pane resize`, and `pane notify` accept a pane target
 - `pane split` accepts a tab or pane target through `--in`
