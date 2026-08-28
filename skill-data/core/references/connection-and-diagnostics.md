@@ -76,9 +76,12 @@ sp config path
 sp config list
 sp config get updates.channel
 sp config set appearance.mode system
+sp config set notifications.tab_move_haptics false
 sp config reset privacy.analytics_enabled
 sp config validate
 ```
+
+`notifications.tab_move_haptics` controls feedback when a dragged tab enters a new drop target.
 
 Validate another settings file:
 
