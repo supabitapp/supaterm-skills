@@ -158,7 +158,7 @@ sp pane split --in <pane-uuid> up
 - `tab focus`, `tab close`, and `tab rename` accept a tab target
 - `tab move` accepts a tab target, then requires a group or root destination
 - `tab next`, `tab prev`, and `tab last` accept an optional space target
-- `pane focus`, `pane close`, `pane capture`, `pane resize`, and `pane notify` accept a pane target
+- `pane focus`, `pane move-to-new-tab`, `pane close`, `pane capture`, `pane resize`, and `pane notify` accept a pane target
 - `pane split` accepts a tab or pane target through `--in`
 - `pane layout` accepts an optional tab target
 - `pane send` accepts an optional pane target as its first argument
