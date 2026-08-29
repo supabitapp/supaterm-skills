@@ -64,11 +64,13 @@ printf '{"hook_event_name":"SessionStart","session_id":"session-1","cwd":"/tmp/p
 Installed hooks pass the parent process ID:
 
 ```bash
-printf '{"hook_event_name":"SessionStart","session_id":"session-1","cwd":"/tmp/project"}' \
+printf '{"hook_event_name":"SessionStart","session_id":"session-1","cwd":"/tmp/project","transcript_path":"/tmp/session-1.jsonl"}' \
   | sp agent receive-agent-hook --agent codex --pid 123
 ```
 
 For Claude and Codex, Supaterm uses only root `SessionStart` events. It ignores every other hook event. Session-start payloads should include the agent's absolute `cwd`. Supaterm uses it for the agent panel Workspace row, Git status, and forked session working directory.
+
+Codex `SessionStart` payloads must include a non-empty `transcript_path`. Supaterm uses the path as persistence metadata and does not read the transcript. The CLI forwards an inherited `CODEX_THREAD_ID`; Supaterm accepts it only when it matches `session_id`, which keeps nested Codex processes from replacing the pane's root session.
 
 An agent-panel fork starts the account login shell in a new pane and enters the agent's native fork command visibly. The pane returns to that same shell when the forked agent exits.
 
