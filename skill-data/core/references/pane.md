@@ -1,7 +1,7 @@
 # Pane commands
 
-`sp pane` splits, focuses, closes, resizes, captures text, takes screenshots, checks readiness,
-notifies, and sends text or keys to panes.
+`sp pane` splits, focuses, moves, closes, resizes, captures text, takes screenshots, checks
+readiness, notifies, and sends text or keys to panes.
 
 ## Split
 
@@ -45,6 +45,19 @@ sp pane close
 sp pane close 1/2/3
 sp pane close <pane-uuid>
 ```
+
+## Move To A New Tab
+
+`sp pane move-to-new-tab [pane]` moves a pane out of a split into an adjacent tab and focuses it.
+The pane must share its current tab with another pane.
+
+```bash
+sp pane move-to-new-tab
+sp pane move-to-new-tab 1/2/3
+sp pane move-to-new-tab <pane-uuid>
+```
+
+The pane keeps its UUID. Commands run inside it still use that UUID after the move.
 
 ## Send Text
 
@@ -158,6 +171,7 @@ Mutating `pane` commands support the standard output flags:
 ```bash
 sp pane split --json right
 sp pane focus --plain 1/2/3
+sp pane move-to-new-tab --json <pane-uuid>
 sp pane key ctrl-c <pane-uuid>
 sp pane close --quiet 1/2/3
 ```
