@@ -46,9 +46,12 @@ sp tab new --instance work-mac --in 1
 
 Normal socket-backed commands require `--instance` or `--socket` when multiple app instances are
 reachable. Durable Codex root session-start routing is the exception: without an explicit target,
-the hidden hook receiver checks every discovered instance and delivers only one exact pane match.
-For a cwd match, it requires a single pane across all live candidates; a second pane with that cwd
-blocks delivery. The matched pane must have no owner or own the incoming session.
+the hidden hook receiver checks every discovered instance. It tries a direct nonshared process,
+same-ID compact owner, exact raw session-title token, guarded startup fork, then a unique cwd. The
+fork route requires one eligible same-workspace pane running `codex fork` from a live session owned
+by another pane. The cwd route requires one match across all compatible instances. Missing instance
+replies and ambiguous evidence block delivery. Supaterm binds the pane's live PID and start time and
+never reads the transcript.
 Managed sockets use the fixed per-user `/tmp/supaterm-<uid>` namespace, independent of
 `XDG_RUNTIME_DIR` and `TMPDIR`.
 

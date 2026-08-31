@@ -169,7 +169,10 @@ sp pane split --in <pane-uuid> up
 For the public commands above, omit ambient assumptions outside Supaterm and pass an explicit
 target. If more than one app instance is reachable, also pass `--instance` or `--socket`.
 The hidden durable Codex root session-start route checks cwd across all live candidates and requires
-a single match. The matched pane must have no owner or own the incoming session.
+a single match across all compatible app instances. Before that fallback, it can use a direct
+nonshared process, same-ID compact owner, exact raw session-title token, or one guarded startup fork
+whose `codex fork` command names a live parent session owned by another pane. Missing instance
+replies and ambiguous evidence block delivery. A custom display title does not replace the raw title.
 
 ```bash
 sp tab new --in 1

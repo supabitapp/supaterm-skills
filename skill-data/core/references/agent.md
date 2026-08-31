@@ -80,11 +80,23 @@ source `startup`, `resume`, `clear`, or `compact`.
 Eligible Codex starts do not use inherited pane or socket targeting. Unless the caller passes
 `--socket` or `--instance`, the CLI removes stale managed socket nodes and polls every remaining
 managed app socket for live Codex pane candidates. Candidate order is a direct nonshared process
-match, the same-ID owner for `compact`, an exact session-title token, then one workspace match. The
-workspace step requires a single cwd match across all live candidates; any second pane with that cwd
-blocks it. The matched pane must have no owner or own the incoming session. It cannot replace another
-session. Other routes fail closed. Delivery uses the pane's detected process identity instead of the
-shared Codex app-server PID. Other hook traffic keeps ambient context.
+match; on a complete round, the same-ID owner for `compact`; after the detection deadline, an exact
+raw session-title token; for `startup`, one guarded fork; otherwise one workspace match. A custom
+display title does not replace the raw title.
+
+The guarded fork route requires exactly one same-workspace candidate that can own the incoming
+session. It must come from the shared Codex host and run
+`codex fork <canonical-parent-session-UUID>`. Another pane must own that live foreground parent, the
+fork must have a different live process identity from each identity recorded for the parent, and no
+other destination may own the incoming session. The final workspace route requires one cwd match
+across all live candidates from all compatible app instances. The pane must have no owner or own the
+incoming session. A second cwd match blocks delivery even when it owns another session.
+
+A direct process match can route before a round completes. Every later route needs a complete round;
+title, fork, and workspace routes also wait for the detection deadline. Missing or incompatible
+instance replies keep a round incomplete. Missing, incomplete, and ambiguous evidence fails closed.
+Delivery uses the pane's live detected PID and process start time instead of the shared Codex
+app-server PID. Other hook traffic keeps ambient context.
 
 New panes clear inherited `CODEX_THREAD_ID`. A mismatched inherited ID rejects a nonshared nested
 session. A shared host ignores inherited state. Replacing another owned session needs a direct
