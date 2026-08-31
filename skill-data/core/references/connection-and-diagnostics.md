@@ -36,10 +36,12 @@ Every socket-backed command accepts:
 - `--instance <name-or-endpoint-id>`
 - `--socket <path>`
 
+Copy the exact `path` from `sp instance ls --json` when using `--socket`.
+
 Examples:
 
 ```bash
-sp ls --socket "$(getconf DARWIN_USER_TEMP_DIR)supaterm/instance-default-pid-1234"
+sp ls --socket /exact/path/from/sp-instance-ls
 sp pane capture --instance work-mac 1/2/3
 sp tab new --instance work-mac --in 1
 ```
