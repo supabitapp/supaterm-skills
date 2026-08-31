@@ -80,9 +80,11 @@ source `startup`, `resume`, `clear`, or `compact`.
 Eligible Codex starts do not use inherited pane or socket targeting. Unless the caller passes
 `--socket` or `--instance`, the CLI removes stale managed socket nodes and polls every remaining
 managed app socket for live Codex pane candidates. Candidate order is a direct nonshared process
-match, the same-ID owner for `compact`, an exact session-title token, then one ownerless workspace
-match. Other routes fail closed. Delivery uses the pane's detected process identity instead of the
-shared Codex app-server PID. Other hook traffic keeps ambient context.
+match, the same-ID owner for `compact`, an exact session-title token, one ownerless workspace match,
+then one remaining workspace match. The final workspace case delivers only when the pane owns the
+incoming session. It cannot replace another session. Other routes fail closed. Delivery uses the
+pane's detected process identity instead of the shared Codex app-server PID. Other hook traffic
+keeps ambient context.
 
 New panes clear inherited `CODEX_THREAD_ID`. A mismatched inherited ID rejects a nonshared nested
 session. A shared host ignores inherited state. Replacing another owned session needs a direct
