@@ -166,7 +166,8 @@ sp pane split --in <pane-uuid> up
 
 ## Outside Supaterm
 
-Outside Supaterm, omit ambient assumptions and pass an explicit target. If more than one app instance is reachable, also pass `--instance` or `--socket`.
+For the public commands above, omit ambient assumptions outside Supaterm and pass an explicit
+target. If more than one app instance is reachable, also pass `--instance` or `--socket`.
 
 ```bash
 sp tab new --in 1

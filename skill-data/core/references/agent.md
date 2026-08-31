@@ -26,7 +26,7 @@ The running Supaterm app copies its bundled discovery skill to `~/.agents/skills
 
 ## Install Hooks
 
-Install Supaterm's managed hook bridge for every supported agent:
+Install Supaterm's managed hooks for every supported agent:
 
 ```bash
 sp agent install-hooks
@@ -36,10 +36,13 @@ Effects:
 
 - `install-hooks` checks every supported agent, reports every failure, and fails when no supported agent is available
 - Claude installs Supaterm hooks into `~/.claude/settings.json`
-- Codex requires Codex 0.144.1 or newer, enables hooks, installs Supaterm hooks into `~/.codex/hooks.json`, and registers native trust through Codex app-server
+- Codex requires Codex 0.144.1 or newer, enables hooks, installs `~/.codex/hooks.json`, and registers native trust through Codex app-server
 - Pi installs the Supaterm package through Pi
 
 The running app does the writing. These commands need a reachable Supaterm instance and change nothing without one.
+Codex installs a marked command with the bundled `sp` executable's absolute path. The command does
+not use runtime `HOME`, `PATH`, or `SUPATERM_CLI_PATH`. Supaterm recognizes the prior
+environment-based command and marked commands with stale paths for install, repair, and removal.
 
 ## Remove Hooks
 
@@ -50,11 +53,12 @@ sp agent remove-hooks
 ```
 
 `remove-hooks` reports every failure and succeeds when an integration is absent or unavailable.
-Removing Codex hooks also removes Supaterm hook trust through Codex app-server.
+Removing Codex hooks strips them from `~/.codex/hooks.json` and removes their trust through Codex
+app-server.
 
 ## Forward Hook Events
 
-`sp agent receive-agent-hook --agent <agent>` reads one hook payload from stdin and forwards it to Supaterm.
+`sp agent receive-agent-hook --agent <agent>` reads one hook payload from stdin and sends eligible events to Supaterm.
 
 ```bash
 printf '{"hook_event_name":"SessionStart","session_id":"session-1","cwd":"/tmp/project"}' \
@@ -64,11 +68,30 @@ printf '{"hook_event_name":"SessionStart","session_id":"session-1","cwd":"/tmp/p
 Installed hooks pass the parent process ID:
 
 ```bash
-printf '{"hook_event_name":"SessionStart","session_id":"session-1","cwd":"/tmp/project"}' \
+printf '{"hook_event_name":"SessionStart","session_id":"session-1","cwd":"/tmp/project","transcript_path":"/tmp/session-1.jsonl","source":"startup"}' \
   | sp agent receive-agent-hook --agent codex --pid 123
 ```
 
-For Claude and Codex, Supaterm uses only root `SessionStart` events. It ignores every other hook event. Session-start payloads should include the agent's absolute `cwd`. Supaterm uses it for the agent panel Workspace row, Git status, and forked session working directory.
+For Claude and Codex, Supaterm uses root `SessionStart` events. It ignores every other hook
+event. Claude session starts should include an absolute `cwd`. A Codex session start is eligible only
+when `agent_id` is absent, `session_id`, `cwd`, and `transcript_path` are nonempty, and it has
+source `startup`, `resume`, `clear`, or `compact`.
+
+Eligible Codex starts do not use inherited pane or socket targeting. Unless the caller passes
+`--socket` or `--instance`, the CLI removes stale managed socket nodes and polls every remaining
+managed app socket for live Codex pane candidates. Candidate order is a direct nonshared process
+match, the same-ID owner for `compact`, an exact session-title token, then one ownerless workspace
+match. Other routes fail closed. Delivery uses the pane's detected process identity instead of the
+shared Codex app-server PID. Other hook traffic keeps ambient context.
+
+New panes clear inherited `CODEX_THREAD_ID`. A mismatched inherited ID rejects a nonshared nested
+session. A shared host ignores inherited state. Replacing another owned session needs a direct
+nonshared process match or exact title; a shared host requires the title. A shared-host `clear` or
+session-switch `resume` without title proof fails closed. A same-ID `compact` keeps its owner.
+Supaterm checks that `transcript_path` is nonempty and never opens the transcript.
+
+The accepted `cwd` supplies the agent panel Workspace row, Git status, and forked session working
+directory.
 
 An agent-panel fork starts the account login shell in a new pane and enters the agent's native fork command visibly. The pane returns to that same shell when the forked agent exits.
 
@@ -83,13 +106,16 @@ printf '{"hook_event_name":"session_start","session_id":"session-1","source":"pi
 
 ## Output
 
-`receive-agent-hook` forwards a payload and prints nothing.
+`receive-agent-hook` prints nothing after delivery or a fail-closed Codex session-start rejection.
 
 `install-hooks` and `remove-hooks` print nothing on success. `reload-rules` prints detection details.
 `skills install` prints the installed path.
 
-Failures go to stderr with a non-zero exit status. With no reachable Supaterm instance:
+Failures go to stderr with a non-zero exit status. With no reachable Supaterm instance, management,
+reload, skill, and ordinary hook traffic follow these rules:
 
-- every one of them prints `Error: No reachable Supaterm instance was found.`
+- each prints `Error: No reachable Supaterm instance was found.`
 - `sp agent` commands exit 64
 - `sp skills` commands exit 1, and `--json` prints `{"success":false,"error":"..."}` on stdout instead
+
+A durable Codex root session start with no unique candidate exits without output or delivery.

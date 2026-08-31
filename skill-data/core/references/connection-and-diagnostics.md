@@ -44,7 +44,11 @@ sp pane capture --instance work-mac 1/2/3
 sp tab new --instance work-mac --in 1
 ```
 
-If multiple reachable app instances exist, `sp` requires `--instance` or `--socket`.
+Normal socket-backed commands require `--instance` or `--socket` when multiple app instances are
+reachable. Durable Codex root session-start routing is the exception: without an explicit target,
+the hidden hook receiver checks every discovered instance and delivers only one exact pane match.
+Managed sockets use the fixed per-user `/tmp/supaterm-<uid>` namespace, independent of
+`XDG_RUNTIME_DIR` and `TMPDIR`.
 
 ## Diagnostics
 
