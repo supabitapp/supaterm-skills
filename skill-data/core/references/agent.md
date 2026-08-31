@@ -38,7 +38,7 @@ Effects:
 - Claude installs Supaterm hooks into `~/.claude/settings.json`
 - Claude adds `terminalProgressBarEnabled: true` only when that key is absent
 - Codex requires Codex 0.144.1 or newer, enables hooks, installs Supaterm hooks into `~/.codex/hooks.json`, and registers native trust through Codex app-server
-- Codex adds `[tui] terminal_title = ["thread-title", "task-progress"]` to `~/.codex/config.toml` only when that key is absent
+- Codex adds `[tui] terminal_title = ["activity", "thread-title", "task-progress"]` to `~/.codex/config.toml` only when that key is absent
 - Pi installs the Supaterm package through Pi
 
 Setup preserves existing values for both seeded keys and is safe to run again. The running app does
