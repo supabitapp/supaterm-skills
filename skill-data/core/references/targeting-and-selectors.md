@@ -169,7 +169,7 @@ sp pane split --in <pane-uuid> up
 For the public commands above, omit ambient assumptions outside Supaterm and pass an explicit
 target. If more than one app instance is reachable, also pass `--instance` or `--socket`.
 The hidden durable Codex root session-start route checks cwd across all live candidates and requires
-a single match.
+a single match. The matched pane must have no owner or own the incoming session.
 
 ```bash
 sp tab new --in 1

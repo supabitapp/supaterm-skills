@@ -48,7 +48,7 @@ Normal socket-backed commands require `--instance` or `--socket` when multiple a
 reachable. Durable Codex root session-start routing is the exception: without an explicit target,
 the hidden hook receiver checks every discovered instance and delivers only one exact pane match.
 For a cwd match, it requires a single pane across all live candidates; a second pane with that cwd
-blocks delivery.
+blocks delivery. The matched pane must have no owner or own the incoming session.
 Managed sockets use the fixed per-user `/tmp/supaterm-<uid>` namespace, independent of
 `XDG_RUNTIME_DIR` and `TMPDIR`.
 
