@@ -39,7 +39,7 @@ Every socket-backed command accepts:
 Examples:
 
 ```bash
-sp ls --socket /tmp/supaterm-501/instance-default-pid-1234
+sp ls --socket "$(getconf DARWIN_USER_TEMP_DIR)supaterm/instance-default-pid-1234"
 sp pane capture --instance work-mac 1/2/3
 sp tab new --instance work-mac --in 1
 ```
@@ -52,7 +52,7 @@ fork route requires one eligible same-workspace pane running `codex fork` from a
 by another pane. The cwd route requires one match across all compatible instances. Missing instance
 replies and ambiguous evidence block delivery. Supaterm binds the pane's live PID and start time and
 never reads the transcript.
-Managed sockets use the fixed per-user `/tmp/supaterm-<uid>` namespace, independent of
+Managed sockets use the `supaterm` directory in Darwin's per-user temporary root, independent of
 `XDG_RUNTIME_DIR` and `TMPDIR`.
 
 ## Diagnostics

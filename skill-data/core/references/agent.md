@@ -78,11 +78,11 @@ when `agent_id` is absent, `session_id`, `cwd`, and `transcript_path` are nonemp
 source `startup`, `resume`, `clear`, or `compact`.
 
 Eligible Codex starts do not use inherited pane or socket targeting. Unless the caller passes
-`--socket` or `--instance`, the CLI removes stale managed socket nodes and polls every remaining
-managed app socket for live Codex pane candidates. Candidate order is a direct nonshared process
-match; on a complete round, the same-ID owner for `compact`; after the detection deadline, an exact
-raw session-title token; for `startup`, one guarded fork; otherwise one workspace match. A custom
-display title does not replace the raw title.
+`--socket` or `--instance`, the CLI removes failed managed socket nodes only when their PIDs are
+dead and polls every remaining managed app socket for live Codex pane candidates. Candidate order
+is a direct nonshared process match; on a complete round, the same-ID owner for `compact`; after the
+detection deadline, an exact raw session-title token; for `startup`, one guarded fork; otherwise one
+workspace match. A custom display title does not replace the raw title.
 
 The guarded fork route requires exactly one same-workspace candidate that can own the incoming
 session. It must come from the shared Codex host and run
