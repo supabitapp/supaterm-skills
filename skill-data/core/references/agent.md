@@ -24,22 +24,25 @@ sp skills install
 
 The running Supaterm app copies its bundled discovery skill to `~/.agents/skills/supaterm`. Existing Supaterm skill directories or symlinks are replaced. Detailed instructions stay in the app bundle and are loaded through `sp skills get`.
 
-## Install Hooks
+## Set Up Integrations
 
-Install Supaterm's managed hook bridge for every supported agent:
+Set up every supported coding-agent integration:
 
 ```bash
-sp agent install-hooks
+sp agent setup
 ```
 
 Effects:
 
-- `install-hooks` checks every supported agent, reports every failure, and fails when no supported agent is available
+- `setup` checks every supported agent, prints progress for each one, reports every failure, and fails when no supported agent is available
 - Claude installs Supaterm hooks into `~/.claude/settings.json`
+- Claude adds `terminalProgressBarEnabled: true` only when that key is absent
 - Codex requires Codex 0.144.1 or newer, enables hooks, installs Supaterm hooks into `~/.codex/hooks.json`, and registers native trust through Codex app-server
+- Codex adds `[tui] terminal_title = ["activity", "thread-title", "task-progress"]` to `~/.codex/config.toml` only when that key is absent
 - Pi installs the Supaterm package through Pi
 
-The running app does the writing. These commands need a reachable Supaterm instance and change nothing without one.
+Setup preserves existing values for both seeded keys and is safe to run again. The running app does
+the writing. Setup needs a reachable Supaterm instance and changes nothing without one.
 
 ## Remove Hooks
 
@@ -64,13 +67,11 @@ printf '{"hook_event_name":"SessionStart","session_id":"session-1","cwd":"/tmp/p
 Installed hooks pass the parent process ID:
 
 ```bash
-printf '{"hook_event_name":"SessionStart","session_id":"session-1","cwd":"/tmp/project","transcript_path":"/tmp/session-1.jsonl"}' \
+printf '{"hook_event_name":"SessionStart","session_id":"session-1","cwd":"/tmp/project"}' \
   | sp agent receive-agent-hook --agent codex --pid 123
 ```
 
 For Claude and Codex, Supaterm uses only root `SessionStart` events. It ignores every other hook event. Session-start payloads should include the agent's absolute `cwd`. Supaterm uses it for the agent panel Workspace row, Git status, and forked session working directory.
-
-Codex `SessionStart` payloads must include a non-empty `transcript_path`. Supaterm uses the path as persistence metadata and does not read the transcript. The CLI forwards an inherited `CODEX_THREAD_ID`; Supaterm accepts it only when it matches `session_id`, which keeps nested Codex processes from replacing the pane's root session.
 
 An agent-panel fork starts the account login shell in a new pane and enters the agent's native fork command visibly. The pane returns to that same shell when the forked agent exits.
 
@@ -87,8 +88,8 @@ printf '{"hook_event_name":"session_start","session_id":"session-1","source":"pi
 
 `receive-agent-hook` forwards a payload and prints nothing.
 
-`install-hooks` and `remove-hooks` print nothing on success. `reload-rules` prints detection details.
-`skills install` prints the installed path.
+`setup` prints a start and result line for each agent. `remove-hooks` prints nothing on success.
+`reload-rules` prints detection details. `skills install` prints the installed path.
 
 Failures go to stderr with a non-zero exit status. With no reachable Supaterm instance:
 
