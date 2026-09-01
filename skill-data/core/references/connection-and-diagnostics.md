@@ -76,10 +76,13 @@ sp config path
 sp config list
 sp config get updates.channel
 sp config set appearance.mode system
+sp config set notifications.sound glass
 sp config set notifications.tab_move_haptics false
 sp config reset privacy.analytics_enabled
 sp config validate
 ```
+
+`notifications.sound` chooses a native macOS sound to play when system notifications are off. `never` is the default, and local sounds are not silenced by Focus.
 
 `notifications.tab_move_haptics` controls feedback when a dragged tab enters a new drop target.
 
