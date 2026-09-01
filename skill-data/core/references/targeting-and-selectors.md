@@ -17,7 +17,7 @@ When a command runs inside Supaterm, many commands can omit their target:
 - `sp tab focus` uses the current tab
 - `sp group collapse` uses the group containing the current tab
 - `sp pane focus` uses the current pane
-- `sp tab new` creates a tab beside the current tab and inherits its group when possible
+- `sp tab new` creates a tab beside the current tab, joining its group or creating one for both tabs
 - `sp pane split` splits the current pane
 
 That ambient context comes from:

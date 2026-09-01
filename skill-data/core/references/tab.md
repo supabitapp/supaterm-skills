@@ -27,7 +27,7 @@ Flags:
 - `--group <group>` creates the tab in a targeted group
 - `--root` creates the tab at the space root
 
-Do not combine `--group` and `--root`. When both are omitted, a new tab inherits the current tab's group when possible and otherwise appears at the space root.
+Do not combine `--group` and `--root`. When both are omitted, a new tab joins the current tab's group. If the current tab is ungrouped, Supaterm creates a group containing the current and new tabs.
 
 A tab with no command starts the account login shell.
 
